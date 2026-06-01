@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Armchair,
   Award,
@@ -44,8 +44,67 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import vardhamanLogo from "@/assets/vardhaman-park-logo.png";
+import luxuryFacade from "@/assets/luxury-facade.jpg";
+import masterPlan from "@/assets/master-plan.jpg";
+import heroBg1 from "@/assets/hero-1.jpg";
+import heroBg2 from "@/assets/hero-2.jpg";
+import heroBg3 from "@/assets/hero-3.jpg";
+
+// Web3Forms Access Key. Get a free key at https://web3forms.com/ to receive submissions in your Gmail.
+const WEB3FORMS_ACCESS_KEY = "c89693eb-c8df-4a6c-9419-f52ba6873523";
 
 function BookingModal({ onClose }: { onClose: () => void }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    date: "",
+    message: "",
+  });
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("submitting");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: "New Site Visit Booking - Vardhaman Park",
+          from_name: "Vardhaman Park Website",
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          date: formData.date,
+          message: formData.message,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setStatus("success");
+        setFormData({ name: "", phone: "", email: "", date: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      console.error("Form submit error:", error);
+      setStatus("error");
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center p-4"
@@ -83,89 +142,134 @@ function BookingModal({ onClose }: { onClose: () => void }) {
           </p>
         </div>
 
-        {/* Form */}
-        <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-2 gap-4">
-            {/* Full Name */}
-            <div className="flex flex-col gap-1.5">
-              <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-                <User className="size-3.5" />
-                Full Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your full name"
-                className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
-              />
+        {status === "success" ? (
+          <div className="text-center py-8 flex flex-col items-center gap-4">
+            <div className="size-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 animate-bounce">
+              <ShieldCheck className="size-8" />
             </div>
-
-            {/* Mobile */}
-            <div className="flex flex-col gap-1.5">
-              <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-                <Phone className="size-3.5" />
-                Mobile Number
-              </label>
-              <input
-                type="tel"
-                placeholder="+91 00000 00000"
-                className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
-              />
-            </div>
-
-            {/* Email */}
-            <div className="flex flex-col gap-1.5">
-              <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-                <Mail className="size-3.5" />
-                Email Address
-              </label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
-              />
-            </div>
-
-            {/* Date */}
-            <div className="flex flex-col gap-1.5">
-              <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-                <CalendarCheck className="size-3.5" />
-                Preferred Visit Date
-              </label>
-              <input
-                type="date"
-                className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors [color-scheme:dark]"
-              />
-            </div>
+            <h3 className="text-neutral-50 font-semibold text-xl">Booking Requested Successfully!</h3>
+            <p className="text-[#a1a1a1] text-sm max-w-sm">
+              Your details have been sent to our luxury consultants via email. We will contact you within 24 hours.
+            </p>
+            <Button
+              onClick={onClose}
+              className="mt-4 bg-[#D4AF37] hover:bg-[#c9a430] text-[#0B0B0B] font-semibold px-6"
+            >
+              Close Window
+            </Button>
           </div>
+        ) : (
+          /* Form */
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4">
+              {/* Full Name */}
+              <div className="flex flex-col gap-1.5">
+                <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
+                  <User className="size-3.5" />
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter your full name"
+                  className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
+                />
+              </div>
 
-          {/* Message */}
-          <div className="flex flex-col gap-1.5">
-            <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-              <MessageSquare className="size-3.5" />
-              Message
-            </label>
-            <textarea
-              rows={3}
-              placeholder="Tell us about your preferences or any questions..."
-              className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors resize-none"
-            />
-          </div>
+              {/* Mobile */}
+              <div className="flex flex-col gap-1.5">
+                <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
+                  <Phone className="size-3.5" />
+                  Mobile Number
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  placeholder="+91 00000 00000"
+                  className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
+                />
+              </div>
 
-          {/* Submit */}
-          <Button
-            type="submit"
-            className="w-full shadow-[0_0_30px_rgba(212,175,55,0.4)] bg-[#D4AF37] hover:bg-[#c9a430] text-[#0B0B0B] font-semibold py-3 gap-2 mt-1"
-            size="lg"
-          >
-            <CalendarCheck className="size-5" />
-            Confirm Booking
-          </Button>
+              {/* Email */}
+              <div className="flex flex-col gap-1.5">
+                <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
+                  <Mail className="size-3.5" />
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="you@example.com"
+                  className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
+                />
+              </div>
 
-          <p className="text-center text-[#a1a1a1] text-xs flex items-center justify-center gap-1.5">
-            <ShieldCheck className="size-3.5 text-[#D4AF37]" />
-            Our luxury consultant will contact you within 24 hours
-          </p>
-        </form>
+              {/* Date */}
+              <div className="flex flex-col gap-1.5">
+                <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
+                  <CalendarCheck className="size-3.5" />
+                  Preferred Visit Date
+                </label>
+                <input
+                  type="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                  required
+                  className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors [color-scheme:dark]"
+                />
+              </div>
+            </div>
+
+            {/* Message */}
+            <div className="flex flex-col gap-1.5">
+              <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
+                <MessageSquare className="size-3.5" />
+                Message
+              </label>
+              <textarea
+                rows={3}
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                placeholder="Tell us about your preferences or any questions..."
+                className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors resize-none"
+              />
+            </div>
+
+            {status === "error" && (
+              <p className="text-red-400 text-xs text-center">
+                Something went wrong. Please check your network and try again.
+              </p>
+            )}
+
+            {/* Submit */}
+            <Button
+              type="submit"
+              disabled={status === "submitting"}
+              className="w-full shadow-[0_0_30px_rgba(212,175,55,0.4)] bg-[#D4AF37] hover:bg-[#c9a430] text-[#0B0B0B] font-semibold py-3 gap-2 mt-1 disabled:opacity-50"
+              size="lg"
+            >
+              <CalendarCheck className="size-5" />
+              {status === "submitting" ? "Sending Request..." : "Confirm Booking"}
+            </Button>
+
+            <p className="text-center text-[#a1a1a1] text-xs flex items-center justify-center gap-1.5">
+              <ShieldCheck className="size-3.5 text-[#D4AF37]" />
+              Our luxury consultant will contact you within 24 hours
+            </p>
+          </form>
+        )}
       </div>
     </div>
   );
@@ -173,6 +277,69 @@ function BookingModal({ onClose }: { onClose: () => void }) {
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroSlides = [
+    "https://images.unsplash.com/photo-1762838039677-d8dcb61ad942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtb2Rlcm4lMjByZXNpZGVudGlhbCUyMGJ1aWxkaW5nJTIwYXJjaGl0ZWN0dXJlJTIwbmlnaHR8ZW58MXwwfHx8MTc4MDMwNzgxMHww&ixlib=rb-4.1.0&q=80&w=1600",
+    heroBg1,
+    heroBg2,
+    heroBg3,
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
+
+  const [contactData, setContactData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
+  const [contactStatus, setContactStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setContactData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactStatus("submitting");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: "New General Inquiry - Vardhaman Park",
+          from_name: "Vardhaman Park Contact Form",
+          name: contactData.name,
+          phone: contactData.phone,
+          email: contactData.email,
+          message: contactData.message,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setContactStatus("success");
+        setContactData({ name: "", phone: "", email: "", message: "" });
+      } else {
+        setContactStatus("error");
+      }
+    } catch (error) {
+      console.error("Contact Form submit error:", error);
+      setContactStatus("error");
+    }
+  };
 
   return (
     <div>
@@ -180,19 +347,13 @@ export default function App() {
       <div className="bg-neutral-950 text-neutral-50 w-full h-fit h-fit min-h-screen w-screen min-w-screen max-w-screen overflow-visible">
         <header className="sticky z-50 backdrop-blur-xl bg-neutral-950/70 border-[#D4AF37]/20 border-t-0 border-r-0 border-b-1 border-l-0 border-solid top-0 w-full">
           <div className="max-w-[1140px] flex mx-auto px-8 justify-between items-center h-20">
-            <div className="flex items-center gap-3">
-              <div className="size-11 bg-gradient-to-br from-[#D4AF37]/30 to-transparent rounded-full border-[#D4AF37]/50 border-1 border-solid flex justify-center items-center">
-                <Gem className="size-5 text-[#D4AF37]" />
-              </div>
-              <div className="leading-none flex flex-col">
-                <span className="font-serif font-semibold text-neutral-50 text-lg leading-7 tracking-wide">
-                  Vardhaman Park
-                </span>
-                <span className="uppercase text-[#D4AF37] text-[10px] tracking-[4.8px]">
-                  Luxury Living
-                </span>
-              </div>
-            </div>
+            <a href="#home" className="flex items-center">
+              <img
+                src={vardhamanLogo}
+                alt="Vardhaman Park"
+                className="h-10 w-auto object-contain"
+              />
+            </a>
             <nav className="flex justify-center items-center gap-1">
               <a href="#home" className="text-[#D4AF37] text-sm leading-5 px-3 gap-2 inline-flex items-center hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
                 <Home className="size-4" />
@@ -230,17 +391,34 @@ export default function App() {
           </div>
         </header>
         <section id="home" className="relative w-full h-190 overflow-hidden">
-          <img
-            alt="Vardhaman Park luxury residences"
-            className="size-full object-cover absolute inset-0"
-            data-authorname="Denike Adenaiya"
-            data-authorurl="https://unsplash.com/@edowaye"
-            data-blurhash="L67-Tg%3oLxCDhR-M{S50KnMx[bI"
-            data-photoid="isq5m4zBE8o"
-            src="https://images.unsplash.com/photo-1762838039677-d8dcb61ad942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtb2Rlcm4lMjByZXNpZGVudGlhbCUyMGJ1aWxkaW5nJTIwYXJjaGl0ZWN0dXJlJTIwbmlnaHR8ZW58MXwwfHx8MTc4MDMwNzgxMHww&ixlib=rb-4.1.0&q=80&w=1600"
-          />
-          <div className="bg-[#0b0b0b]/95 absolute inset-0" />
-          <div className="relative max-w-[1140px] flex mx-auto px-8 flex-col justify-center h-full">
+          <div className="absolute inset-0 w-full h-full overflow-hidden">
+            {heroSlides.map((slide, index) => {
+              const isActive = index === currentSlide;
+              const isPrevious = index === (currentSlide - 1 + heroSlides.length) % heroSlides.length;
+              
+              let translateStyle = "translate-x-full";
+              let zStyle = "z-0";
+              
+              if (isActive) {
+                translateStyle = "translate-x-0";
+                zStyle = "z-10";
+              } else if (isPrevious) {
+                translateStyle = "-translate-x-full";
+                zStyle = "z-10";
+              }
+              
+              return (
+                <img
+                  key={index}
+                  alt={`Vardhaman Park luxury residences ${index + 1}`}
+                  className={`size-full object-cover absolute inset-0 transition-transform duration-1000 ease-in-out ${translateStyle} ${zStyle}`}
+                  src={slide}
+                />
+              );
+            })}
+          </div>
+          <div className="bg-[#0b0b0b]/90 absolute inset-0 z-20" />
+          <div className="relative z-30 max-w-[1140px] flex mx-auto px-8 flex-col justify-center h-full">
             <div className="max-w-2xl">
               <div className="inline-flex backdrop-blur-md rounded-full bg-[#D4AF37]/10 border-[#D4AF37]/40 border-1 border-solid mb-6 px-4 py-1.5 items-center gap-2">
                 <Star className="size-3.5 text-[#D4AF37]" />
@@ -560,11 +738,7 @@ export default function App() {
                 <img
                   alt="Luxury facade"
                   className="object-cover w-full h-115"
-                  data-authorname="Carl Newton"
-                  data-authorurl="https://unsplash.com/@carl_newton"
-                  data-blurhash="LwGcipXAt8W=?wRjf6WBMxRjRjjY"
-                  data-photoid="2C6kAtCXf6U"
-                  src="https://images.unsplash.com/photo-2C6kAtCXf6U?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBsdXh1cnklMjBidWlsZGluZyUyMGZhY2FkZSUyMGdsYXNzfGVufDF8MXx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=800"
+                  src={luxuryFacade}
                 />
                 <div className="bg-[#0b0b0b]/60 absolute inset-0" />
               </div>
@@ -588,11 +762,7 @@ export default function App() {
                 <img
                   alt="Master plan"
                   className="object-cover w-full h-105"
-                  data-authorname="Sven Mieke"
-                  data-authorurl="https://unsplash.com/@sxoxm"
-                  data-blurhash="LCIX~v_4EMR*4T8_x]tS-;o0D$bc"
-                  data-photoid="fteR0e2BzKo"
-                  src="https://images.unsplash.com/photo-1542621334-a254cf47733d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxhcmNoaXRlY3R1cmFsJTIwZmxvb3IlMjBwbGFuJTIwYmx1ZXByaW50JTIwZGVzaWdufGVufDF8MHx8fDE3ODAzMDc4MjF8MA&ixlib=rb-4.1.0&q=80&w=900"
+                  src={masterPlan}
                 />
                 <div className="bg-[#0b0b0b]/50 absolute inset-0" />
                 <div className="left-[28%] top-[35%] flex absolute items-center gap-2">
@@ -667,15 +837,15 @@ export default function App() {
             <div className="group relative col-span-2 rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
               <img
                 alt="Swimming pool"
-                className="object-cover transition-transform duration-700 w-full h-65"
+                className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
                 data-authorname="Roberto Nickson"
                 data-authorurl="https://unsplash.com/@rpnickson"
                 data-blurhash="LqI;bfXTJ7e.~VNHW=bFxaIVNat6"
                 data-photoid="MA82mPIZeGI"
                 src="https://images.unsplash.com/photo-1561501900-3701fa6a0864?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxzd2ltbWluZyUyMHBvb2wlMjBsdXh1cnklMjByZXNvcnR8ZW58MXwwfHx8MTc4MDMwNzgxMHww&ixlib=rb-4.1.0&q=80&w=900"
               />
-              <div className="bg-[#0b0b0b]/85 absolute inset-0" />
-              <div className="flex absolute left-5 bottom-5 items-center gap-2">
+              <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
+              <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
                 <Waves className="size-5 text-[#D4AF37]" />
                 <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
                   Infinity Pool
@@ -685,15 +855,15 @@ export default function App() {
             <div className="group relative rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
               <img
                 alt="Gym"
-                className="object-cover transition-transform duration-700 w-full h-65"
+                className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
                 data-authorname="gina lin"
                 data-authorurl="https://unsplash.com/@shuttch"
                 data-blurhash="LOL|S[ITElR+.Sofsmoe}l%MM|od"
                 data-photoid="m27OTMegUyA"
                 src="https://images.unsplash.com/photo-1542766788-a2f588f447ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBneW0lMjBmaXRuZXNzJTIwY2VudGVyJTIwbHV4dXJ5fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=500"
               />
-              <div className="bg-[#0b0b0b]/85 absolute inset-0" />
-              <div className="flex absolute left-5 bottom-5 items-center gap-2">
+              <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
+              <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
                 <Dumbbell className="size-5 text-[#D4AF37]" />
                 <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
                   Fitness Studio
@@ -703,15 +873,15 @@ export default function App() {
             <div className="group relative rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
               <img
                 alt="Clubhouse"
-                className="object-cover transition-transform duration-700 w-full h-65"
+                className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
                 data-authorname="Pontus Wellgraf"
                 data-authorurl="https://unsplash.com/@wellgraf"
                 data-blurhash="L683@Zs;0xwc-9I:J8RiTJt7nOIo"
                 data-photoid="yihqkkTw53M"
                 src="https://images.unsplash.com/photo-1584670380670-28f0d4cabb06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjbHViaG91c2UlMjBsb3VuZ2UlMjBpbnRlcmlvcnxlbnwxfDB8fHwxNzgwMzA3ODEwfDA&ixlib=rb-4.1.0&q=80&w=500"
               />
-              <div className="bg-[#0b0b0b]/85 absolute inset-0" />
-              <div className="flex absolute left-5 bottom-5 items-center gap-2">
+              <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
+              <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
                 <Armchair className="size-5 text-[#D4AF37]" />
                 <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
                   Grand Clubhouse
@@ -721,15 +891,15 @@ export default function App() {
             <div className="group relative col-span-2 rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
               <img
                 alt="Garden"
-                className="object-cover transition-transform duration-700 w-full h-65"
+                className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
                 data-authorname="Daniel Zopf"
                 data-authorurl="https://unsplash.com/@daniel_zopf"
                 data-blurhash="LZ9[l5o~H?V=o,o$RfaJyEbKaJj="
                 data-photoid="MFN2HPCWXgY"
                 src="https://images.unsplash.com/photo-1626456877396-5af019036c63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsYW5kc2NhcGVkJTIwZ2FyZGVuJTIwcGFyayUyMGdyZWVufGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=900"
               />
-              <div className="bg-[#0b0b0b]/85 absolute inset-0" />
-              <div className="flex absolute left-5 bottom-5 items-center gap-2">
+              <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
+              <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
                 <Trees className="size-5 text-[#D4AF37]" />
                 <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
                   Landscaped Gardens
@@ -989,74 +1159,116 @@ export default function App() {
             {/* Contact Form */}
             <div className="col-span-2 rounded-3xl bg-neutral-900 border border-[#D4AF37]/20 p-8">
               <h3 className="font-serif font-semibold text-neutral-50 text-2xl mb-6">Send Us a Message</h3>
-              <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
-                <div className="grid grid-cols-2 gap-4">
+              {contactStatus === "success" ? (
+                <div className="text-center py-12 flex flex-col items-center gap-4">
+                  <div className="size-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 animate-bounce">
+                    <ShieldCheck className="size-8" />
+                  </div>
+                  <h3 className="text-neutral-50 font-semibold text-xl">Message Sent Successfully!</h3>
+                  <p className="text-[#a1a1a1] text-sm max-w-sm">
+                    Thank you for contacting us. Your message has been sent to our luxury consultants via email.
+                  </p>
+                  <Button
+                    onClick={() => setContactStatus("idle")}
+                    className="mt-4 bg-[#D4AF37] hover:bg-[#c9a430] text-[#0B0B0B] font-semibold px-6"
+                  >
+                    Send Another Message
+                  </Button>
+                </div>
+              ) : (
+                <form className="flex flex-col gap-4" onSubmit={handleContactSubmit}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
+                        <User className="size-3.5" />
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={contactData.name}
+                        onChange={handleContactChange}
+                        required
+                        placeholder="Enter your full name"
+                        className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
+                        <Phone className="size-3.5" />
+                        Mobile Number
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={contactData.phone}
+                        onChange={handleContactChange}
+                        required
+                        placeholder="+91 00000 00000"
+                        className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
+                      />
+                    </div>
+                  </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-                      <User className="size-3.5" />
-                      Full Name
+                      <Mail className="size-3.5" />
+                      Email Address
                     </label>
                     <input
-                      type="text"
-                      placeholder="Enter your full name"
+                      type="email"
+                      name="email"
+                      value={contactData.email}
+                      onChange={handleContactChange}
+                      required
+                      placeholder="you@example.com"
                       className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-                      <Phone className="size-3.5" />
-                      Mobile Number
+                      <MessageSquare className="size-3.5" />
+                      Message
                     </label>
-                    <input
-                      type="tel"
-                      placeholder="+91 00000 00000"
-                      className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
+                    <textarea
+                      rows={4}
+                      name="message"
+                      value={contactData.message}
+                      onChange={handleContactChange}
+                      required
+                      placeholder="Tell us about your requirements or any questions..."
+                      className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors resize-none"
                     />
                   </div>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-                    <Mail className="size-3.5" />
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="you@example.com"
-                    className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="flex items-center gap-1.5 text-[#D4AF37] text-xs font-medium">
-                    <MessageSquare className="size-3.5" />
-                    Message
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="Tell us about your requirements or any questions..."
-                    className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors resize-none"
-                  />
-                </div>
-                <div className="flex gap-3 mt-1">
-                  <Button
-                    type="submit"
-                    className="flex-1 shadow-[0_0_25px_rgba(212,175,55,0.35)] bg-[#D4AF37] hover:bg-[#c9a430] text-[#0B0B0B] font-semibold gap-2"
-                    size="lg"
-                  >
-                    <MessageSquare className="size-4" />
-                    Send Message
-                  </Button>
-                  <Button
-                    type="button"
-                    className="flex-1 border border-[#D4AF37]/50 text-[#D4AF37] bg-transparent hover:bg-[#D4AF37]/10 gap-2"
-                    size="lg"
-                    variant="outline"
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    <CalendarCheck className="size-4" />
-                    Book a Visit
-                  </Button>
-                </div>
-              </form>
+
+                  {contactStatus === "error" && (
+                    <p className="text-red-400 text-xs text-center">
+                      Something went wrong. Please check your network and try again.
+                    </p>
+                  )}
+
+                  <div className="flex gap-3 mt-1">
+                    <Button
+                      type="submit"
+                      disabled={contactStatus === "submitting"}
+                      className="flex-1 shadow-[0_0_25px_rgba(212,175,55,0.35)] bg-[#D4AF37] hover:bg-[#c9a430] text-[#0B0B0B] font-semibold gap-2 disabled:opacity-50"
+                      size="lg"
+                    >
+                      <MessageSquare className="size-4" />
+                      {contactStatus === "submitting" ? "Sending..." : "Send Message"}
+                    </Button>
+                    <Button
+                      type="button"
+                      className="flex-1 border border-[#D4AF37]/50 text-[#D4AF37] bg-transparent hover:bg-[#D4AF37]/10 gap-2"
+                      size="lg"
+                      variant="outline"
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      <CalendarCheck className="size-4" />
+                      Book a Visit
+                    </Button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </section>
@@ -1070,19 +1282,13 @@ export default function App() {
 
               {/* Brand */}
               <div className="col-span-1">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="size-11 bg-gradient-to-br from-[#D4AF37]/30 to-transparent rounded-full border border-[#D4AF37]/50 flex justify-center items-center">
-                    <Gem className="size-5 text-[#D4AF37]" />
-                  </div>
-                  <div className="leading-none flex flex-col">
-                    <span className="font-serif font-semibold text-neutral-50 text-lg tracking-wide">
-                      Vardhaman Park
-                    </span>
-                    <span className="uppercase text-[#D4AF37] text-[10px] tracking-[4.8px]">
-                      Luxury Living
-                    </span>
-                  </div>
-                </div>
+                <a href="#home" className="flex items-center mb-4">
+                  <img
+                    src={vardhamanLogo}
+                    alt="Vardhaman Park"
+                    className="h-10 w-auto object-contain"
+                  />
+                </a>
                 <p className="text-[#a1a1a1] text-sm leading-6 mb-5">
                   An exclusive enclave of meticulously crafted residences designed for those who expect nothing less than extraordinary.
                 </p>
