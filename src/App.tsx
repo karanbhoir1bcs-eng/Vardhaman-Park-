@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import vardhamanLogo from "@/assets/vardhaman-park-logo.png";
+import vardhamanCrest from "@/assets/vardhaman-park-crest.png";
 import luxuryFacade from "@/assets/luxury-facade.jpg";
 import masterPlan from "@/assets/master-plan.jpg";
 import heroBg1 from "@/assets/hero-1.jpg";
@@ -349,39 +349,42 @@ export default function App() {
       <div className="bg-neutral-950 text-neutral-50 w-full min-h-screen overflow-x-hidden">
         <header className="sticky z-50 backdrop-blur-xl bg-neutral-950/70 border-[#D4AF37]/20 border-t-0 border-r-0 border-b-1 border-l-0 border-solid top-0 w-full">
           <div className="max-w-[1140px] flex mx-auto px-8 justify-between items-center h-20">
-            <a href="#home" className="flex items-center">
+            <a href="#home" className="flex items-center gap-[11px] -ml-1">
               <img
-                src={vardhamanLogo}
+                src={vardhamanCrest}
                 alt="Vardhaman Park"
                 className="h-10 w-auto object-contain"
               />
+              <span className="font-serif font-semibold text-white text-lg tracking-[1.5px] uppercase mt-0.5">
+                Vardhaman Park
+              </span>
             </a>
-            <nav className="hidden md:flex justify-center items-center gap-1">
-              <a href="#home" className="text-[#D4AF37] text-sm leading-5 px-3 gap-2 inline-flex items-center hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
+            <nav className="hidden md:flex justify-center items-center gap-1 md:ml-6 mr-auto">
+              <a href="#home" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
                 <Home className="size-4" />
                 Home
               </a>
-              <a href="#about" className="text-[#a1a1a1] text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-neutral-50 hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
+              <a href="#about" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
                 <Info className="size-4" />
                 About
               </a>
-              <a href="#project" className="text-[#a1a1a1] text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-neutral-50 hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
+              <a href="#project" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
                 <Building2 className="size-4" />
                 Project
               </a>
-              <a href="#amenities" className="text-[#a1a1a1] text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-neutral-50 hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
+              <a href="#amenities" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
                 <Sparkles className="size-4" />
                 Amenities
               </a>
-              <a href="#gallery" className="text-[#a1a1a1] text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-neutral-50 hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
+              <a href="#gallery" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
                 <Image className="size-4" />
                 Gallery
               </a>
-              <a href="#location" className="text-[#a1a1a1] text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-neutral-50 hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
+              <a href="#location" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
                 <MapPin className="size-4" />
                 Location
               </a>
-              <a href="#contact" className="text-[#a1a1a1] text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-neutral-50 hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
+              <a href="#contact" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
                 <Phone className="size-4" />
                 Contact
               </a>
@@ -501,7 +504,7 @@ export default function App() {
           </div>
           <div className="bg-[#0b0b0b]/90 absolute inset-0 z-20" />
           <div className="relative z-30 max-w-[1140px] flex mx-auto px-8 flex-col justify-center flex-grow pt-32 pb-16 md:py-0">
-            <div className="max-w-2xl">
+            <div className="max-w-2xl md:pl-12">
               <div className="inline-flex backdrop-blur-md rounded-full bg-[#D4AF37]/10 border-[#D4AF37]/40 border-1 border-solid mb-6 px-4 py-1.5 items-center gap-2">
                 <Star className="size-3.5 text-[#D4AF37]" />
                 <span className="uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px]">
@@ -1363,14 +1366,17 @@ export default function App() {
 
               {/* Brand */}
               <div className="col-span-1">
-                <a href="#home" className="flex items-center mb-4">
+                <a href="#home" className="flex items-center gap-[11px] mb-4">
                   <img
-                    src={vardhamanLogo}
+                    src={vardhamanCrest}
                     alt="Vardhaman Park"
                     className="h-10 w-auto object-contain"
                   />
+                  <span className="font-serif font-semibold text-white text-lg tracking-[1.5px] uppercase mt-0.5">
+                    Vardhaman Park
+                  </span>
                 </a>
-                <p className="text-[#a1a1a1] text-sm leading-6 mb-5">
+                <p className="text-white text-sm leading-6 mb-5">
                   An exclusive enclave of meticulously crafted residences designed for those who expect nothing less than extraordinary.
                 </p>
                 <div className="flex items-center gap-3">
@@ -1387,7 +1393,7 @@ export default function App() {
                       aria-label={label}
                       className="size-9 rounded-full bg-neutral-800 border border-neutral-700 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 flex items-center justify-center transition-colors"
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-4 text-[#a1a1a1] hover:text-[#D4AF37]">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-4 text-white hover:text-[#D4AF37]">
                         <path d={path} />
                       </svg>
                     </a>
@@ -1397,7 +1403,7 @@ export default function App() {
 
               {/* Quick Links */}
               <div>
-                <h4 className="font-serif font-semibold text-neutral-50 text-base mb-5">Quick Links</h4>
+                <h4 className="font-serif font-semibold text-white text-base mb-5">Quick Links</h4>
                 <ul className="flex flex-col gap-3">
                   {[
                     { label: "Home", href: "#home" },
@@ -1409,7 +1415,7 @@ export default function App() {
                     { label: "Contact", href: "#contact" },
                   ].map(({ label, href }) => (
                     <li key={label}>
-                      <a href={href} className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors flex items-center gap-2 group">
+                      <a href={href} className="text-white text-sm hover:text-[#D4AF37] transition-colors flex items-center gap-2 group">
                         <span className="w-4 h-px bg-[#D4AF37]/40 group-hover:w-6 group-hover:bg-[#D4AF37] transition-all duration-300" />
                         {label}
                       </a>
@@ -1420,11 +1426,11 @@ export default function App() {
 
               {/* Project Info */}
               <div>
-                <h4 className="font-serif font-semibold text-neutral-50 text-base mb-5">Project Info</h4>
+                <h4 className="font-serif font-semibold text-white text-base mb-5">Project Info</h4>
                 <ul className="flex flex-col gap-3">
                   {["2 BHK Residences", "3 BHK Residences", "4 BHK Penthouses", "Master Plan", "Floor Plans", "Price List", "RERA Details"].map((item) => (
                     <li key={item}>
-                      <a href="#" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors flex items-center gap-2 group">
+                      <a href="#" className="text-white text-sm hover:text-[#D4AF37] transition-colors flex items-center gap-2 group">
                         <span className="w-4 h-px bg-[#D4AF37]/40 group-hover:w-6 group-hover:bg-[#D4AF37] transition-all duration-300" />
                         {item}
                       </a>
@@ -1435,13 +1441,13 @@ export default function App() {
 
               {/* Contact */}
               <div>
-                <h4 className="font-serif font-semibold text-neutral-50 text-base mb-5">Contact Us</h4>
+                <h4 className="font-serif font-semibold text-white text-base mb-5">Contact Us</h4>
                 <ul className="flex flex-col gap-4">
                   <li className="flex items-start gap-3">
                     <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center mt-0.5">
                       <MapPin className="size-4 text-[#D4AF37]" />
                     </div>
-                    <p className="text-[#a1a1a1] text-sm leading-5">
+                    <p className="text-white text-sm leading-5">
                       Vardhaman Park, Sector 12,<br />
                       New Delhi – 110 001, India
                     </p>
@@ -1450,7 +1456,7 @@ export default function App() {
                     <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center">
                       <Phone className="size-4 text-[#D4AF37]" />
                     </div>
-                    <a href="tel:+911234567890" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">
+                    <a href="tel:+911234567890" className="text-white text-sm hover:text-[#D4AF37] transition-colors">
                       +91 12345 67890
                     </a>
                   </li>
@@ -1458,7 +1464,7 @@ export default function App() {
                     <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center">
                       <Mail className="size-4 text-[#D4AF37]" />
                     </div>
-                    <a href="mailto:info@vardhamanpark.com" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">
+                    <a href="mailto:info@vardhamanpark.com" className="text-white text-sm hover:text-[#D4AF37] transition-colors">
                       info@vardhamanpark.com
                     </a>
                   </li>
@@ -1477,16 +1483,16 @@ export default function App() {
 
             {/* Divider */}
             <div className="border-t border-[#D4AF37]/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <p className="text-[#a1a1a1] text-xs">
+              <p className="text-white text-xs">
                 © 2025 Vardhaman Park. All rights reserved.
               </p>
-              <div className="flex items-center gap-1 text-[#a1a1a1] text-xs">
+              <div className="flex items-center gap-1 text-white text-xs">
                 <ShieldCheck className="size-3.5 text-[#D4AF37]" />
                 RERA Approved &nbsp;·&nbsp; MahaRERA No. P52100XXXXX
               </div>
               <div className="flex items-center gap-4">
                 {["Privacy Policy", "Terms of Use", "Disclaimer"].map((item) => (
-                  <a key={item} href="#" className="text-[#a1a1a1] text-xs hover:text-[#D4AF37] transition-colors">
+                  <a key={item} href="#" className="text-white text-xs hover:text-[#D4AF37] transition-colors">
                     {item}
                   </a>
                 ))}
