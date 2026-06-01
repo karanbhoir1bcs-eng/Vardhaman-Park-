@@ -347,57 +347,52 @@ export default function App() {
     <div>
       {isModalOpen && <BookingModal onClose={() => setIsModalOpen(false)} />}
       <div className="bg-neutral-950 text-neutral-50 w-full min-h-screen overflow-x-hidden">
-        <header className="sticky z-50 backdrop-blur-xl bg-neutral-950/70 border-[#D4AF37]/20 border-t-0 border-r-0 border-b-1 border-l-0 border-solid top-0 w-full">
-          <div className="max-w-[1140px] flex mx-auto px-8 justify-between items-center h-20">
+        <header className="fixed left-0 right-0 top-0 z-50 w-full px-4 py-3 sm:px-8">
+          <div className="max-w-[1180px] flex mx-auto px-5 sm:px-8 justify-between items-center h-16 rounded-[2rem] border border-white/15 bg-neutral-950/55 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <a href="#home" className="flex items-center gap-[11px] -ml-1">
               <img
                 src={vardhamanCrest}
                 alt="Vardhaman Park"
-                className="h-10 w-auto object-contain"
+                className="h-9 w-auto object-contain"
               />
-              <span className="font-serif font-semibold text-white text-lg tracking-[1.5px] uppercase mt-0.5">
+              <span className="font-serif font-semibold text-white text-base sm:text-lg tracking-[1.5px] uppercase mt-0.5">
                 Vardhaman Park
               </span>
             </a>
-            <nav className="hidden md:flex justify-center items-center gap-1 md:ml-6 mr-auto">
-              <a href="#home" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
-                <Home className="size-4" />
+            <nav className="hidden md:flex justify-center items-center gap-1 lg:gap-2 md:ml-auto md:mr-6">
+              <a href="#home" className="text-white/90 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
                 Home
               </a>
-              <a href="#about" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
-                <Info className="size-4" />
+              <a href="#about" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
                 About
               </a>
-              <a href="#project" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
-                <Building2 className="size-4" />
+              <a href="#project" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
                 Project
               </a>
-              <a href="#amenities" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
-                <Sparkles className="size-4" />
+              <a href="#amenities" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
                 Amenities
               </a>
-              <a href="#gallery" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
-                <Image className="size-4" />
+              <a href="#gallery" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
                 Gallery
               </a>
-              <a href="#location" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
-                <MapPin className="size-4" />
+              <a href="#location" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
                 Location
               </a>
-              <a href="#contact" className="text-white text-sm leading-5 px-3 gap-2 inline-flex items-center hover:text-[#D4AF37] hover:bg-neutral-800/50 rounded-md py-2 transition-colors">
-                <Phone className="size-4" />
+              <a href="#contact" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
                 Contact
               </a>
             </nav>
-            <Button className="hidden md:flex shadow-[0_0_25px_rgba(212,175,55,0.4)] bg-[#D4AF37] text-[#0B0B0B] gap-2" onClick={() => setIsModalOpen(true)}>
-              <CalendarCheck className="size-4" />
-              Book Visit
-            </Button>
+            <div className="hidden md:flex items-center gap-4">
+              <Button className="rounded-full bg-white text-[#101010] hover:bg-white/90 px-5 gap-2" onClick={() => setIsModalOpen(true)}>
+                <CalendarCheck className="size-4" />
+                Book Visit
+              </Button>
+            </div>
             
             {/* Hamburger Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex md:hidden p-2 text-neutral-50 hover:bg-neutral-800 rounded-md transition-colors border-0 bg-transparent cursor-pointer"
+              className="flex md:hidden p-2 text-neutral-50 hover:bg-white/10 rounded-full transition-colors border-0 bg-transparent cursor-pointer"
             >
               {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
             </button>
@@ -406,7 +401,7 @@ export default function App() {
 
         {/* Mobile Navigation Dropdown */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-neutral-950/95 border-b border-[#D4AF37]/20 backdrop-blur-xl absolute top-20 left-0 w-full z-40 py-6 px-8 flex flex-col gap-4">
+          <div className="md:hidden bg-neutral-950/95 border border-white/15 backdrop-blur-xl fixed top-22 left-4 right-4 z-40 rounded-2xl py-6 px-6 flex flex-col gap-4">
             <a
               href="#home"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -475,107 +470,73 @@ export default function App() {
             </Button>
           </div>
         )}
-        <section id="home" className="relative w-full min-h-screen md:h-[800px] overflow-hidden flex flex-col justify-between">
+        <section id="home" className="relative isolate w-full overflow-hidden px-4 pb-10 pt-6 sm:px-8">
           <div className="absolute inset-0 w-full h-full overflow-hidden">
             {heroSlides.map((slide, index) => {
               const isActive = index === currentSlide;
-              const isPrevious = index === (currentSlide - 1 + heroSlides.length) % heroSlides.length;
-              
-              let translateStyle = "translate-x-full";
-              let zStyle = "z-0";
-              
-              if (isActive) {
-                translateStyle = "translate-x-0";
-                zStyle = "z-10";
-              } else if (isPrevious) {
-                translateStyle = "-translate-x-full";
-                zStyle = "z-10";
-              }
-              
+
               return (
                 <img
                   key={index}
                   alt={`Vardhaman Park luxury residences ${index + 1}`}
-                  className={`size-full object-cover absolute inset-0 transition-transform duration-1000 ease-in-out ${translateStyle} ${zStyle}`}
+                  className={`size-full object-cover absolute inset-0 transition-all duration-1000 ease-in-out ${
+                    isActive ? "opacity-100 scale-100" : "opacity-0 scale-105"
+                  }`}
                   src={slide}
                 />
               );
             })}
           </div>
-          <div className="bg-[#0b0b0b]/90 absolute inset-0 z-20" />
-          <div className="relative z-30 max-w-[1140px] flex mx-auto px-8 flex-col justify-center flex-grow pt-32 pb-16 md:py-0">
-            <div className="max-w-2xl md:pl-12">
-              <div className="inline-flex backdrop-blur-md rounded-full bg-[#D4AF37]/10 border-[#D4AF37]/40 border-1 border-solid mb-6 px-4 py-1.5 items-center gap-2">
+          <div className="absolute inset-0 z-20 bg-[linear-gradient(90deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.48)_48%,rgba(0,0,0,0.32)_100%)]" />
+          <div className="absolute inset-0 z-20 bg-black/20" />
+
+          <div className="relative z-30 mx-auto flex min-h-[720px] max-w-[1180px] flex-col justify-end rounded-[2rem] border border-white/20 bg-black/20 px-5 pb-6 pt-32 shadow-[0_28px_90px_rgba(0,0,0,0.55)] backdrop-blur-[2px] sm:min-h-[740px] sm:px-8 sm:pb-8 md:min-h-[780px] md:px-12 md:pb-12">
+            <div className="max-w-[790px]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
                 <Star className="size-3.5 text-[#D4AF37]" />
-                <span className="uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px]">
-                  Pre-Launch · RERA Approved
+                <span className="uppercase text-white/90 text-xs leading-4 tracking-[3px]">
+                  Pre-Launch | RERA Approved
                 </span>
               </div>
-              <h1 className="font-serif font-semibold text-neutral-50 text-4xl sm:text-5xl md:text-6xl leading-tight md:leading-[63px] tracking-tight">
-                Where Luxury Meets
-                <span className="bg-gradient-to-r from-[#D4AF37] via-[#f5e3a3] to-[#D4AF37] bg-clip-text text-transparent">
-                  Timeless Living
-                </span>
-              </h1>
-              <p className="max-w-xl leading-relaxed text-[#a1a1a1] text-base md:text-lg mt-6">
-                An exclusive enclave of meticulously crafted residences,
-                world-class amenities, and uncompromising elegance — designed
-                for those who expect nothing less than extraordinary.
+              <p className="mt-8 max-w-xl text-sm sm:text-base leading-6 text-white/80">
+                Explore premium residences crafted around green views, quiet luxury, and effortless city access.
               </p>
-              <div className="flex mt-8 flex-wrap items-center gap-4">
-                <Button
-                  className="shadow-[0_0_30px_rgba(212,175,55,0.5)] bg-[#D4AF37] text-[#0B0B0B] px-7 gap-2"
-                  size="lg"
-                >
-                  <Compass className="size-5" />
-                  Explore Project
-                </Button>
-                <Button
-                  className="backdrop-blur-md bg-neutral-950/30 text-neutral-50 border-[#D4AF37]/50 border-0 border-solid px-7 gap-2"
-                  size="lg"
-                  variant="outline"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  <CalendarCheck className="size-5" />
-                  Book Site Visit
-                </Button>
-              </div>
+              <h1 className="mt-3 max-w-[780px] font-serif font-semibold text-white text-5xl leading-[1.03] sm:text-6xl md:text-7xl">
+                Discover Elevated Living at Vardhaman Park
+              </h1>
             </div>
-          </div>
-          <div className="relative md:absolute md:left-1/2 md:-translate-x-1/2 md:bottom-8 z-30 max-w-[1140px] px-8 pb-12 md:pb-0 w-full">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="backdrop-blur-xl rounded-2xl bg-neutral-900/60 border-[#D4AF37]/20 border-1 border-solid p-6">
-                <p className="font-serif font-semibold text-[#D4AF37] text-2xl md:text-3xl leading-9">
-                  25+
-                </p>
-                <p className="text-[#a1a1a1] text-xs md:text-sm mt-1">
-                  Acres of Greenery
-                </p>
-              </div>
-              <div className="backdrop-blur-xl rounded-2xl bg-neutral-900/60 border-[#D4AF37]/20 border-1 border-solid p-6">
-                <p className="font-serif font-semibold text-[#D4AF37] text-2xl md:text-3xl leading-9">
-                  1200+
-                </p>
-                <p className="text-[#a1a1a1] text-xs md:text-sm mt-1">
-                  Luxury Residences
-                </p>
-              </div>
-              <div className="backdrop-blur-xl rounded-2xl bg-neutral-900/60 border-[#D4AF37]/20 border-1 border-solid p-6">
-                <p className="font-serif font-semibold text-[#D4AF37] text-2xl md:text-3xl leading-9">
-                  40+
-                </p>
-                <p className="text-[#a1a1a1] text-xs md:text-sm mt-1">
-                  World-Class Amenities
-                </p>
-              </div>
-              <div className="backdrop-blur-xl rounded-2xl bg-neutral-900/60 border-[#D4AF37]/20 border-1 border-solid p-6">
-                <p className="font-serif font-semibold text-[#D4AF37] text-2xl md:text-3xl leading-9">
-                  18 Yrs
-                </p>
-                <p className="text-[#a1a1a1] text-xs md:text-sm mt-1">
-                  of Trusted Legacy
-                </p>
-              </div>
+
+            <div className="mt-8 grid max-w-[930px] grid-cols-1 gap-3 rounded-2xl border border-white/15 bg-black/30 p-3 backdrop-blur-md sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto]">
+              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3">
+                <span className="text-xs leading-4 text-white/60">Location</span>
+                <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
+                  <option className="bg-neutral-950 text-white">New Delhi</option>
+                  <option className="bg-neutral-950 text-white">Mumbai</option>
+                  <option className="bg-neutral-950 text-white">Pune</option>
+                </select>
+              </label>
+              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3">
+                <span className="text-xs leading-4 text-white/60">Property</span>
+                <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
+                  <option className="bg-neutral-950 text-white">Luxury Apartment</option>
+                  <option className="bg-neutral-950 text-white">Penthouse</option>
+                  <option className="bg-neutral-950 text-white">Garden Residence</option>
+                </select>
+              </label>
+              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3">
+                <span className="text-xs leading-4 text-white/60">Price Range</span>
+                <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
+                  <option className="bg-neutral-950 text-white">Rs. 1.8 Cr - Rs. 3.5 Cr</option>
+                  <option className="bg-neutral-950 text-white">Rs. 3.5 Cr - Rs. 5 Cr</option>
+                  <option className="bg-neutral-950 text-white">Rs. 5 Cr+</option>
+                </select>
+              </label>
+              <Button asChild className="min-h-14 rounded-full bg-white px-7 text-[#101010] hover:bg-white/90">
+                <a href="#project">
+                  <Compass className="size-4" />
+                  Find Now
+                </a>
+              </Button>
             </div>
           </div>
         </section>

@@ -4,6 +4,7 @@
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;
 }
 
 /* limit the size of max height elements */
