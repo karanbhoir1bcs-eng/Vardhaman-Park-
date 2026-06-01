@@ -1107,96 +1107,80 @@ export default function App() {
           </div>
         </section>
         <section id="location" className="max-w-[1140px] mx-auto px-8 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-16">
-            <div>
-              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
-                <span className="bg-[#D4AF37] w-8 h-px" />
-                Location Advantage
-              </div>
-              <h2 className="leading-tight font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
-                Connected to Everything That Matters
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 mt-8 gap-4">
-                <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
-                  <GraduationCap className="size-5 text-[#D4AF37]" />
-                  <div>
-                    <p className="font-medium text-neutral-50 text-sm leading-5">
-                      Top Schools
-                    </p>
-                    <p className="text-[#a1a1a1] text-xs leading-4">
-                      5 min away
-                    </p>
-                  </div>
-                </div>
-                <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
-                  <Hospital className="size-5 text-[#D4AF37]" />
-                  <div>
-                    <p className="font-medium text-neutral-50 text-sm leading-5">
-                      Hospitals
-                    </p>
-                    <p className="text-[#a1a1a1] text-xs leading-4">
-                      8 min away
-                    </p>
-                  </div>
-                </div>
-                <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
-                  <ShoppingBag className="size-5 text-[#D4AF37]" />
-                  <div>
-                    <p className="font-medium text-neutral-50 text-sm leading-5">
-                      Shopping Malls
-                    </p>
-                    <p className="text-[#a1a1a1] text-xs leading-4">
-                      10 min away
-                    </p>
-                  </div>
-                </div>
-                <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
-                  <Milestone className="size-5 text-[#D4AF37]" />
-                  <div>
-                    <p className="font-medium text-neutral-50 text-sm leading-5">
-                      Highway
-                    </p>
-                    <p className="text-[#a1a1a1] text-xs leading-4">
-                      3 min away
-                    </p>
-                  </div>
-                </div>
-                <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
-                  <TrainFront className="size-5 text-[#D4AF37]" />
-                  <div>
-                    <p className="font-medium text-neutral-50 text-sm leading-5">
-                      Railway Station
-                    </p>
-                    <p className="text-[#a1a1a1] text-xs leading-4">
-                      12 min away
-                    </p>
-                  </div>
-                </div>
-                <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
-                  <Plane className="size-5 text-[#D4AF37]" />
-                  <div>
-                    <p className="font-medium text-neutral-50 text-sm leading-5">
-                      Airport
-                    </p>
-                    <p className="text-[#a1a1a1] text-xs leading-4" />
-                  </div>
-                </div>
+          <div className="text-center mb-12">
+            <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
+              <span className="bg-[#D4AF37] w-8 h-px" />
+              Location Advantage
+              <span className="bg-[#D4AF37] w-8 h-px" />
+            </div>
+            <h2 className="font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
+              Connected to Everything That Matters
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+              <GraduationCap className="size-5 text-[#D4AF37]" />
+              <div>
+                <p className="font-medium text-neutral-50 text-sm leading-5">
+                  Top Schools
+                </p>
+                <p className="text-[#a1a1a1] text-xs leading-4">
+                  5 min away
+                </p>
               </div>
             </div>
-            
-            {/* Map Column */}
-            <div className="rounded-3xl border border-[#D4AF37]/20 overflow-hidden h-96 w-full shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.814397732363!2d72.8258284!3d19.0722108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c9115b802a43%3A0xe54c1fc7cf97c02b!2sVardhaman%20Park!5e0!3m2!1sen!2sin!4v1780000000000!5m2!1sen!2sin"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen={true}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Vardhaman Park Location Map"
-                className="grayscale opacity-75 contrast-125 invert filter brightness-90"
-              />
+            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+              <Hospital className="size-5 text-[#D4AF37]" />
+              <div>
+                <p className="font-medium text-neutral-50 text-sm leading-5">
+                  Hospitals
+                </p>
+                <p className="text-[#a1a1a1] text-xs leading-4">
+                  8 min away
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+              <ShoppingBag className="size-5 text-[#D4AF37]" />
+              <div>
+                <p className="font-medium text-neutral-50 text-sm leading-5">
+                  Shopping Malls
+                </p>
+                <p className="text-[#a1a1a1] text-xs leading-4">
+                  10 min away
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+              <Milestone className="size-5 text-[#D4AF37]" />
+              <div>
+                <p className="font-medium text-neutral-50 text-sm leading-5">
+                  Highway
+                </p>
+                <p className="text-[#a1a1a1] text-xs leading-4">
+                  3 min away
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+              <TrainFront className="size-5 text-[#D4AF37]" />
+              <div>
+                <p className="font-medium text-neutral-50 text-sm leading-5">
+                  Railway Station
+                </p>
+                <p className="text-[#a1a1a1] text-xs leading-4">
+                  12 min away
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+              <Plane className="size-5 text-[#D4AF37]" />
+              <div>
+                <p className="font-medium text-neutral-50 text-sm leading-5">
+                  Airport
+                </p>
+                <p className="text-[#a1a1a1] text-xs leading-4" />
+              </div>
             </div>
           </div>
         </section>
