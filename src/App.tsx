@@ -7,6 +7,8 @@ import {
   Building2,
   CalendarCheck,
   Car,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   Compass,
   Cpu,
@@ -51,6 +53,12 @@ import masterPlan from "@/assets/master-plan.jpg";
 import heroBg1 from "@/assets/hero-1.jpg";
 import heroBg2 from "@/assets/hero-2.jpg";
 import heroBg3 from "@/assets/hero-3.jpg";
+import heroCityscape from "@/assets/hero-cityscape.jpg";
+import vardhamanBuilding from "@/assets/vardhaman-building.jpg";
+import galleryLiving1 from "@/assets/gallery-living-1.jpg";
+import galleryBedroom1 from "@/assets/gallery-bedroom-1.jpg";
+import galleryLiving2 from "@/assets/gallery-living-2.jpg";
+import galleryBedroom2 from "@/assets/gallery-bedroom-2.jpg";
 
 // Web3Forms Access Key. Get a free key at https://web3forms.com/ to receive submissions in your Gmail.
 const WEB3FORMS_ACCESS_KEY = "c89693eb-c8df-4a6c-9419-f52ba6873523";
@@ -276,13 +284,73 @@ function BookingModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+const galleryItems = [
+  {
+    id: 1,
+    title: "Luxury Kitchen",
+    category: "interiors",
+    src: "https://images.unsplash.com/photo-1738748444653-2fb1388aef1a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwbHV4dXJ5JTIwbWFyYmxlfGVufDF8MXx8fDE3ODAzMDc4MjF8MA&ixlib=rb-4.1.0&q=80&w=800",
+  },
+  {
+    id: 2,
+    title: "Elegant Bedroom",
+    category: "bedrooms",
+    src: "https://images.unsplash.com/photo-1699800900071-ae073285ca02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBiZWRyb29tJTIwaW50ZXJpb3IlMjBkZXNpZ24lMjBlbGVnYW50fGVufDF8MHx8fDE3ODAyMjgwNzV8MA&ixlib=rb-4.1.0&q=80&w=800",
+  },
+  {
+    id: 3,
+    title: "City Skyline",
+    category: "exteriors",
+    src: "https://images.unsplash.com/photo-1596564309076-01c1868b07a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxhZXJpYWwlMjB2aWV3JTIwbW9kZXJuJTIwY2l0eSUyMHNreWxpbmUlMjB0d2lsaWdodHxlbnwxfDB8fHwxNzgwMzA3ODIxfDA&ixlib=rb-4.1.0&q=80&w=1000",
+  },
+  {
+    id: 4,
+    title: "Modern Bathroom",
+    category: "interiors",
+    src: "https://images.unsplash.com/photo-1576698483491-8c43f0862543?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBiYXRocm9vbSUyMG1vZGVybiUyMGRlc2lnbnxlbnwxfDF8fHwxNzgwMzA3ODIxfDA&ixlib=rb-4.1.0&q=80&w=800",
+  },
+  {
+    id: 5,
+    title: "Premium Living Room",
+    category: "living",
+    src: "https://images.unsplash.com/photo-1611094016919-36b65678f3d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb20lMjBlbGVnYW50fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=1000",
+  },
+  {
+    id: 6,
+    title: "Modern Living Space",
+    category: "living",
+    src: galleryLiving1,
+  },
+  {
+    id: 7,
+    title: "Luxury Bedroom",
+    category: "bedrooms",
+    src: galleryBedroom1,
+  },
+  {
+    id: 8,
+    title: "Contemporary Living Room",
+    category: "living",
+    src: galleryLiving2,
+  },
+  {
+    id: 9,
+    title: "Master Suite",
+    category: "bedrooms",
+    src: galleryBedroom2,
+  },
+];
+
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [galleryFilter, setGalleryFilter] = useState("all");
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const heroSlides = [
-    "https://images.unsplash.com/photo-1762838039677-d8dcb61ad942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtb2Rlcm4lMjByZXNpZGVudGlhbCUyMGJ1aWxkaW5nJTIwYXJjaGl0ZWN0dXJlJTIwbmlnaHR8ZW58MXwwfHx8MTc4MDMwNzgxMHww&ixlib=rb-4.1.0&q=80&w=1600",
+    heroCityscape,
+    vardhamanBuilding,
     heroBg1,
     heroBg2,
     heroBg3,
@@ -470,7 +538,7 @@ export default function App() {
             </Button>
           </div>
         )}
-        <section id="home" className="relative isolate w-full overflow-hidden px-4 pb-10 pt-6 sm:px-8">
+        <section id="home" className="relative isolate w-full overflow-hidden px-4 pb-4 pt-4 sm:px-6">
           <div className="absolute inset-0 w-full h-full overflow-hidden">
             {heroSlides.map((slide, index) => {
               const isActive = index === currentSlide;
@@ -490,7 +558,7 @@ export default function App() {
           <div className="absolute inset-0 z-20 bg-[linear-gradient(90deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.48)_48%,rgba(0,0,0,0.32)_100%)]" />
           <div className="absolute inset-0 z-20 bg-black/20" />
 
-          <div className="relative z-30 mx-auto flex min-h-[720px] max-w-[1180px] flex-col justify-end rounded-[2rem] border border-white/20 bg-black/20 px-5 pb-6 pt-32 shadow-[0_28px_90px_rgba(0,0,0,0.55)] backdrop-blur-[2px] sm:min-h-[740px] sm:px-8 sm:pb-8 md:min-h-[780px] md:px-12 md:pb-12">
+          <div className="relative z-30 mx-auto flex min-h-[520px] max-w-[1180px] flex-col justify-start px-4 pb-4 pt-24 sm:min-h-[560px] sm:px-6 sm:pb-6 md:min-h-[600px] md:px-8 md:pb-8">
             <div className="max-w-[790px]">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
                 <Star className="size-3.5 text-[#D4AF37]" />
@@ -498,16 +566,16 @@ export default function App() {
                   Pre-Launch | RERA Approved
                 </span>
               </div>
-              <p className="mt-8 max-w-xl text-sm sm:text-base leading-6 text-white/80">
-                Explore premium residences crafted around green views, quiet luxury, and effortless city access.
-              </p>
-              <h1 className="mt-3 max-w-[780px] font-serif font-semibold text-white text-5xl leading-[1.03] sm:text-6xl md:text-7xl">
+              <h1 className="mt-3 max-w-[780px] font-serif font-semibold text-white text-4xl leading-[1.05] sm:text-5xl md:text-6xl">
                 Discover Elevated Living at Vardhaman Park
               </h1>
+              <p className="mt-4 max-w-xl text-sm sm:text-base leading-6 text-white/80">
+                Explore premium residences crafted around green views, quiet luxury, and effortless city access.
+              </p>
             </div>
 
-            <div className="mt-8 grid max-w-[930px] grid-cols-1 gap-3 rounded-2xl border border-white/15 bg-black/30 p-3 backdrop-blur-md sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto]">
-              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3">
+            <div className="mt-[90px] w-full grid grid-cols-1 gap-2.5 rounded-2xl border border-white/15 bg-black/30 p-3 backdrop-blur-md sm:grid-cols-3">
+              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3 flex flex-col justify-center gap-1">
                 <span className="text-xs leading-4 text-white/60">Location</span>
                 <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
                   <option className="bg-neutral-950 text-white">New Delhi</option>
@@ -515,7 +583,7 @@ export default function App() {
                   <option className="bg-neutral-950 text-white">Pune</option>
                 </select>
               </label>
-              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3">
+              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3 flex flex-col justify-center gap-1">
                 <span className="text-xs leading-4 text-white/60">Property</span>
                 <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
                   <option className="bg-neutral-950 text-white">Luxury Apartment</option>
@@ -523,7 +591,7 @@ export default function App() {
                   <option className="bg-neutral-950 text-white">Garden Residence</option>
                 </select>
               </label>
-              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3">
+              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3 flex flex-col justify-center gap-1">
                 <span className="text-xs leading-4 text-white/60">Price Range</span>
                 <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
                   <option className="bg-neutral-950 text-white">Rs. 1.8 Cr - Rs. 3.5 Cr</option>
@@ -531,8 +599,8 @@ export default function App() {
                   <option className="bg-neutral-950 text-white">Rs. 5 Cr+</option>
                 </select>
               </label>
-              <Button asChild className="min-h-14 rounded-full bg-white px-7 text-[#101010] hover:bg-white/90">
-                <a href="#project">
+              <Button asChild className="sm:col-span-3 min-h-[56px] rounded-xl bg-white px-7 text-[#101010] hover:bg-[#D4AF37] hover:text-[#0B0B0B] transition-colors gap-2 font-semibold">
+                <a href="#project" className="flex items-center justify-center gap-2">
                   <Compass className="size-4" />
                   Find Now
                 </a>
@@ -540,10 +608,10 @@ export default function App() {
             </div>
           </div>
         </section>
-        <section id="about" className="max-w-[1140px] mx-auto px-8 py-20">
+        <section id="about" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16">
             <div className="relative">
-              <div className="rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
+              <div className="rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
                 <img
                   alt="Luxury interior"
                   className="object-cover w-full h-110"
@@ -554,7 +622,7 @@ export default function App() {
                   src="https://images.unsplash.com/photo-1611094016919-36b65678f3d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb20lMjBlbGVnYW50fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=800"
                 />
               </div>
-              <div className="backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl bg-neutral-900/80 border-[#D4AF37]/30 border-1 border-solid absolute right-0 bottom-0 md:-right-6 md:-bottom-6 p-4 md:p-6">
+              <div className="backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl bg-neutral-900/80 border border-solid border-[#D4AF37]/30 absolute right-0 bottom-0 md:-right-6 md:-bottom-6 p-4 md:p-6">
                 <div className="flex items-center gap-3">
                   <Award className="size-8 text-[#D4AF37]" />
                   <div>
@@ -583,8 +651,8 @@ export default function App() {
                 every detail is crafted to perfection.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 mt-8 gap-4">
-                <Card className="bg-neutral-900 border-[#D4AF37]/20 border-0 border-solid p-5 gap-2">
-                  <CardHeader className="p-0 gap-2">
+                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-lg">
+                  <CardHeader className="p-0 gap-2 flex flex-col">
                     <Eye className="size-6 text-[#D4AF37]" />
                     <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
                       Our Vision
@@ -597,8 +665,8 @@ export default function App() {
                     </p>
                   </CardContent>
                 </Card>
-                <Card className="bg-neutral-900 border-[#D4AF37]/20 border-0 border-solid p-5 gap-2">
-                  <CardHeader className="p-0 gap-2">
+                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-lg">
+                  <CardHeader className="p-0 gap-2 flex flex-col">
                     <Target className="size-6 text-[#D4AF37]" />
                     <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
                       Our Mission
@@ -615,8 +683,8 @@ export default function App() {
             </div>
           </div>
         </section>
-        <section id="project" className="border-y bg-neutral-900/30 border-[#D4AF37]/10 border-0 border-solid py-20">
-          <div className="max-w-[1140px] mx-auto px-8">
+        <section id="project" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
+          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
             <div className="text-center mb-12">
               <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
                 <span className="bg-[#D4AF37] w-8 h-px" />
@@ -628,9 +696,9 @@ export default function App() {
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="group transition-all bg-neutral-900 border-[#D4AF37]/15 border-0 border-solid p-6 gap-3">
-                <CardHeader className="p-0 gap-3">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border-[#D4AF37]/30 border-1 border-solid flex justify-center items-center">
+              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                <CardHeader className="p-0 gap-3 flex flex-col">
+                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
                     <MapPin className="size-6 text-[#D4AF37]" />
                   </div>
                   <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
@@ -644,9 +712,9 @@ export default function App() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="group transition-all bg-neutral-900 border-[#D4AF37]/15 border-0 border-solid p-6 gap-3">
-                <CardHeader className="p-0 gap-3">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border-[#D4AF37]/30 border-1 border-solid flex justify-center items-center">
+              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                <CardHeader className="p-0 gap-3 flex flex-col">
+                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
                     <Maximize className="size-6 text-[#D4AF37]" />
                   </div>
                   <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
@@ -657,9 +725,9 @@ export default function App() {
                   <p className="text-[#a1a1a1] text-sm leading-5">{`Expansive 2, 3 & 4 BHK homes with grand layouts and panoramic vistas.`}</p>
                 </CardContent>
               </Card>
-              <Card className="group transition-all bg-neutral-900 border-[#D4AF37]/15 border-0 border-solid p-6 gap-3">
-                <CardHeader className="p-0 gap-3">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border-[#D4AF37]/30 border-1 border-solid flex justify-center items-center">
+              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                <CardHeader className="p-0 gap-3 flex flex-col">
+                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
                     <Sparkles className="size-6 text-[#D4AF37]" />
                   </div>
                   <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
@@ -673,9 +741,9 @@ export default function App() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="group transition-all bg-neutral-900 border-[#D4AF37]/15 border-0 border-solid p-6 gap-3">
-                <CardHeader className="p-0 gap-3">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border-[#D4AF37]/30 border-1 border-solid flex justify-center items-center">
+              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                <CardHeader className="p-0 gap-3 flex flex-col">
+                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
                     <Leaf className="size-6 text-[#D4AF37]" />
                   </div>
                   <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
@@ -689,9 +757,9 @@ export default function App() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="group transition-all bg-neutral-900 border-[#D4AF37]/15 border-0 border-solid p-6 gap-3">
-                <CardHeader className="p-0 gap-3">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border-[#D4AF37]/30 border-1 border-solid flex justify-center items-center">
+              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                <CardHeader className="p-0 gap-3 flex flex-col">
+                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
                     <ShieldCheck className="size-6 text-[#D4AF37]" />
                   </div>
                   <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
@@ -705,9 +773,9 @@ export default function App() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="group transition-all bg-neutral-900 border-[#D4AF37]/15 border-0 border-solid p-6 gap-3">
-                <CardHeader className="p-0 gap-3">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border-[#D4AF37]/30 border-1 border-solid flex justify-center items-center">
+              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                <CardHeader className="p-0 gap-3 flex flex-col">
+                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
                     <Cpu className="size-6 text-[#D4AF37]" />
                   </div>
                   <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
@@ -725,7 +793,7 @@ export default function App() {
           </div>
         </section>
         <section className="relative py-20 overflow-hidden">
-          <div className="max-w-[1140px] mx-auto px-8">
+          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16">
               <div>
                 <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
@@ -736,8 +804,8 @@ export default function App() {
                   The Distinction of Excellence
                 </h2>
                 <div className="flex mt-8 flex-col gap-5">
-                  <div className="group border-transparent transition-all rounded-2xl border-black/1 border-1 border-solid flex p-3 gap-4">
-                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border-[#D4AF37]/40 border-1 border-solid flex justify-center items-center">
+                  <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
                       <Gem className="size-5 text-[#D4AF37]" />
                     </div>
                     <div>
@@ -750,8 +818,8 @@ export default function App() {
                       </p>
                     </div>
                   </div>
-                  <div className="group border-transparent transition-all rounded-2xl border-black/1 border-1 border-solid flex p-3 gap-4">
-                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border-[#D4AF37]/40 border-1 border-solid flex justify-center items-center">
+                  <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
                       <Clock className="size-5 text-[#D4AF37]" />
                     </div>
                     <div>
@@ -764,8 +832,8 @@ export default function App() {
                       </p>
                     </div>
                   </div>
-                  <div className="group border-transparent transition-all rounded-2xl border-black/1 border-1 border-solid flex p-3 gap-4">
-                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border-[#D4AF37]/40 border-1 border-solid flex justify-center items-center">
+                  <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
                       <HandCoins className="size-5 text-[#D4AF37]" />
                     </div>
                     <div>
@@ -780,19 +848,18 @@ export default function App() {
                   </div>
                 </div>
               </div>
-              <div className="relative rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
+              <div className="relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
                 <img
-                  alt="Luxury facade"
+                  alt="Vardhaman Park Building"
                   className="object-cover w-full h-72 sm:h-115"
-                  src={luxuryFacade}
+                  src={vardhamanBuilding}
                 />
-                <div className="bg-[#0b0b0b]/60 absolute inset-0" />
               </div>
             </div>
           </div>
         </section>
-        <section className="border-y bg-neutral-900/30 border-[#D4AF37]/10 border-0 border-solid py-20">
-          <div className="max-w-[1140px] mx-auto px-8">
+        <section className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
+          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
             <div className="text-center mb-12">
               <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
                 <span className="bg-[#D4AF37] w-8 h-px" />
@@ -804,7 +871,7 @@ export default function App() {
               </h2>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="col-span-1 lg:col-span-2 relative rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
+              <div className="col-span-1 lg:col-span-2 relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
                 <img
                   alt="Master plan"
                   className="object-cover w-full h-72 sm:h-105"
@@ -813,20 +880,20 @@ export default function App() {
                 <div className="bg-[#0b0b0b]/50 absolute inset-0" />
                 <div className="left-[28%] top-[35%] flex absolute items-center gap-2">
                   <span className="size-4 animate-pulse shadow-[0_0_15px_rgba(212,175,55,0.8)] rounded-full bg-[#D4AF37] flex justify-center items-center" />
-                  <span className="backdrop-blur-md rounded-full bg-neutral-900/80 text-neutral-50 text-xs leading-4 border-[#D4AF37]/40 border-1 border-solid px-3 py-1">
+                  <span className="backdrop-blur-md rounded-full bg-neutral-900/80 text-neutral-50 text-xs leading-4 border border-solid border-[#D4AF37]/40 px-3 py-1">
                     Tower A
                   </span>
                 </div>
                 <div className="left-[60%] top-[55%] flex absolute items-center gap-2">
                   <span className="size-4 animate-pulse shadow-[0_0_15px_rgba(212,175,55,0.8)] rounded-full bg-[#D4AF37] flex justify-center items-center" />
-                  <span className="backdrop-blur-md rounded-full bg-neutral-900/80 text-neutral-50 text-xs leading-4 border-[#D4AF37]/40 border-1 border-solid px-3 py-1">
+                  <span className="backdrop-blur-md rounded-full bg-neutral-900/80 text-neutral-50 text-xs leading-4 border border-solid border-[#D4AF37]/40 px-3 py-1">
                     Clubhouse
                   </span>
                 </div>
               </div>
               <div className="flex flex-col gap-4">
-                <Card className="bg-neutral-900 border-[#D4AF37]/20 border-0 border-solid p-5 gap-2">
-                  <CardHeader className="p-0 gap-1">
+                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
+                  <CardHeader className="p-0 gap-1 flex flex-col">
                     <Building className="size-6 text-[#D4AF37]" />
                     <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
                       8 Premium Towers
@@ -838,8 +905,8 @@ export default function App() {
                     </p>
                   </CardContent>
                 </Card>
-                <Card className="bg-neutral-900 border-[#D4AF37]/20 border-0 border-solid p-5 gap-2">
-                  <CardHeader className="p-0 gap-1">
+                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
+                  <CardHeader className="p-0 gap-1 flex flex-col">
                     <Trees className="size-6 text-[#D4AF37]" />
                     <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
                       70% Open Spaces
@@ -851,8 +918,8 @@ export default function App() {
                     </p>
                   </CardContent>
                 </Card>
-                <Card className="bg-neutral-900 border-[#D4AF37]/20 border-0 border-solid p-5 gap-2">
-                  <CardHeader className="p-0 gap-1">
+                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
+                  <CardHeader className="p-0 gap-1 flex flex-col">
                     <LayoutGrid className="size-6 text-[#D4AF37]" />
                     <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
                       Smart Layouts
@@ -868,7 +935,7 @@ export default function App() {
             </div>
           </div>
         </section>
-        <section id="amenities" className="max-w-[1140px] mx-auto px-8 py-20">
+        <section id="amenities" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
           <div className="text-center mb-12">
             <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
               <span className="bg-[#D4AF37] w-8 h-px" />
@@ -880,7 +947,7 @@ export default function App() {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="group relative col-span-1 md:col-span-2 rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
+            <div className="group relative col-span-1 md:col-span-2 rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg">
               <img
                 alt="Swimming pool"
                 className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
@@ -898,7 +965,7 @@ export default function App() {
                 </span>
               </div>
             </div>
-            <div className="group relative rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
+            <div className="group relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg">
               <img
                 alt="Gym"
                 className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
@@ -916,7 +983,7 @@ export default function App() {
                 </span>
               </div>
             </div>
-            <div className="group relative rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
+            <div className="group relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg">
               <img
                 alt="Clubhouse"
                 className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
@@ -934,7 +1001,7 @@ export default function App() {
                 </span>
               </div>
             </div>
-            <div className="group relative col-span-1 md:col-span-2 rounded-3xl border-[#D4AF37]/20 border-1 border-solid overflow-hidden">
+            <div className="group relative col-span-1 md:col-span-2 rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg">
               <img
                 alt="Garden"
                 className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
@@ -954,29 +1021,29 @@ export default function App() {
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 mt-6 gap-4">
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-2">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
               <Footprints className="size-5 text-[#D4AF37]" />
               <span className="text-neutral-50 text-sm leading-5">
                 Jogging Track
               </span>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-2">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
               <Baby className="size-5 text-[#D4AF37]" />
               <span className="text-neutral-50 text-sm leading-5">
                 Kids Play Area
               </span>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-2">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
               <ShieldCheck className="size-5 text-[#D4AF37]" />
               <span className="text-neutral-50 text-sm leading-5">
                 Security
               </span>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-2">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
               <Car className="size-5 text-[#D4AF37]" />
               <span className="text-neutral-50 text-sm leading-5">Parking</span>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-2">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
               <Users className="size-5 text-[#D4AF37]" />
               <span className="text-neutral-50 text-sm leading-5">
                 Community Hall
@@ -984,93 +1051,150 @@ export default function App() {
             </div>
           </div>
         </section>
-        <section id="gallery" className="border-y bg-neutral-900/30 border-[#D4AF37]/10 border-0 border-solid py-20">
-          <div className="max-w-[1140px] mx-auto px-8">
+        <section id="gallery" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
+          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
             <div className="text-center mb-12">
               <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
                 <span className="bg-[#D4AF37] w-8 h-px" />
                 Gallery
                 <span className="bg-[#D4AF37] w-8 h-px" />
               </div>
-              <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
+              <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10 mb-8">
                 Glimpses of Grandeur
               </h2>
+
+              {/* Gallery Filter Tabs */}
+              <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-10">
+                {[
+                  { id: "all", label: "All" },
+                  { id: "living", label: "Living Room" },
+                  { id: "bedrooms", label: "Bedrooms" },
+                  { id: "interiors", label: "Kitchen & Bath" },
+                  { id: "exteriors", label: "Exteriors" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setGalleryFilter(tab.id)}
+                    className={`px-5 py-2 rounded-full border border-solid text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
+                      galleryFilter === tab.id
+                        ? "bg-[#D4AF37] border-[#D4AF37] text-neutral-950 shadow-[0_4px_15px_rgba(212,175,55,0.25)] font-bold"
+                        : "border-neutral-800 text-neutral-400 hover:text-neutral-200 hover:border-[#D4AF37]/45"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-4">
-              <div className="group relative row-span-1 sm:row-span-2 rounded-2xl border-[#D4AF37]/15 border-1 border-solid overflow-hidden">
-                <img
-                  alt="Kitchen"
-                  className="object-cover transition-transform duration-700 w-full h-72 sm:h-full"
-                  data-authorname="Alexey Aladashvili"
-                  data-authorurl="https://unsplash.com/@alexeyaladashvili61"
-                  data-blurhash="LMEySlt5IVWB9Fxus.t7~qRjR*of"
-                  data-photoid="hE9OVVyZN-Y"
-                  src="https://images.unsplash.com/photo-1738748444653-2fb1388aef1a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwbHV4dXJ5JTIwbWFyYmxlfGVufDF8MXx8fDE3ODAzMDc4MjF8MA&ixlib=rb-4.1.0&q=80&w=500"
-                />
-                <div className="transition-all opacity-0 bg-[#0B0B0B]/0 flex absolute inset-0 justify-center items-center">
-                  <Maximize2 className="size-7 text-[#D4AF37]" />
-                </div>
-              </div>
-              <div className="group relative rounded-2xl border-[#D4AF37]/15 border-1 border-solid overflow-hidden">
-                <img
-                  alt="Bedroom"
-                  className="object-cover transition-transform duration-700 w-full h-48 sm:h-50"
-                  data-authorname="Le Quan"
-                  data-authorurl="https://unsplash.com/@mrkheu"
-                  data-blurhash="LFEVf_9EtR01_2IU-;9F0KNKoL-:"
-                  data-photoid="anLoz4xfC8c"
-                  src="https://images.unsplash.com/photo-1699800900071-ae073285ca02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBiZWRyb29tJTIwaW50ZXJpb3IlMjBkZXNpZ24lMjBlbGVnYW50fGVufDF8MHx8fDE3ODAyMjgwNzV8MA&ixlib=rb-4.1.0&q=80&w=500"
-                />
-                <div className="transition-all opacity-0 bg-[#0B0B0B]/0 flex absolute inset-0 justify-center items-center">
-                  <Maximize2 className="size-7 text-[#D4AF37]" />
-                </div>
-              </div>
-              <div className="group relative col-span-1 sm:col-span-2 rounded-2xl border-[#D4AF37]/15 border-1 border-solid overflow-hidden">
-                <img
-                  alt="Skyline"
-                  className="object-cover transition-transform duration-700 w-full h-48 sm:h-50"
-                  data-authorname="OJ Serrano"
-                  data-authorurl="https://unsplash.com/@senyor_oj"
-                  data-blurhash="L*I}@if6a}of~qj]jtjs-;WBj[WB"
-                  data-photoid="iacKpANQHNA"
-                  src="https://images.unsplash.com/photo-1596564309076-01c1868b07a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxhZXJpYWwlMjB2aWV3JTIwbW9kZXJuJTIwY2l0eSUyMHNreWxpbmUlMjB0d2lsaWdodHxlbnwxfDB8fHwxNzgwMzA3ODIxfDA&ixlib=rb-4.1.0&q=80&w=700"
-                />
-                <div className="transition-all opacity-0 bg-[#0B0B0B]/0 flex absolute inset-0 justify-center items-center">
-                  <Maximize2 className="size-7 text-[#D4AF37]" />
-                </div>
-              </div>
-              <div className="group relative rounded-2xl border-[#D4AF37]/15 border-1 border-solid overflow-hidden">
-                <img
-                  alt="Bathroom"
-                  className="object-cover transition-transform duration-700 w-full h-48 sm:h-50"
-                  data-authorname="Amira Aboalnaga"
-                  data-authorurl="https://unsplash.com/@amiraaboalnaga"
-                  data-blurhash="L6I#GW0LM{nh-T%Ms,-:V?IAt8aK"
-                  data-photoid="O7WjrXiKy_s"
-                  src="https://images.unsplash.com/photo-1576698483491-8c43f0862543?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBiYXRocm9vbSUyMG1vZGVybiUyMGRlc2lnbnxlbnwxfDF8fHwxNzgwMzA3ODIxfDA&ixlib=rb-4.1.0&q=80&w=500"
-                />
-                <div className="transition-all opacity-0 bg-[#0B0B0B]/0 flex absolute inset-0 justify-center items-center">
-                  <Maximize2 className="size-7 text-[#D4AF37]" />
-                </div>
-              </div>
-              <div className="group relative col-span-1 sm:col-span-2 rounded-2xl border-[#D4AF37]/15 border-1 border-solid overflow-hidden">
-                <img
-                  alt="Living"
-                  className="object-cover transition-transform duration-700 w-full h-48 sm:h-50"
-                  data-authorname="Lotus Design N Print"
-                  data-authorurl="https://unsplash.com/@lotusdnp"
-                  data-blurhash="LJHC7jM|ad%M_N-;j[WWI9M{bIoe"
-                  data-photoid="n5RsUiVf5T0"
-                  src="https://images.unsplash.com/photo-1611094016919-36b65678f3d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb20lMjBlbGVnYW50fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=700"
-                />
-                <div className="transition-all opacity-0 bg-[#0B0B0B]/0 flex absolute inset-0 justify-center items-center">
-                  <Maximize2 className="size-7 text-[#D4AF37]" />
-                </div>
-              </div>
+
+            {/* Gallery Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {galleryItems
+                .filter((item) => galleryFilter === "all" || item.category === galleryFilter)
+                .map((item) => {
+                  const originalIndex = galleryItems.findIndex((g) => g.id === item.id);
+                  return (
+                    <div
+                      key={item.id}
+                      onClick={() => setLightboxIndex(originalIndex)}
+                      className="group relative cursor-pointer aspect-[4/3] rounded-2xl border border-solid border-[#D4AF37]/15 overflow-hidden shadow-md bg-neutral-900"
+                    >
+                      <img
+                        alt={item.title}
+                        className="object-cover transition-transform duration-700 w-full h-full group-hover:scale-105"
+                        src={item.src}
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="text-xs text-[#D4AF37] font-semibold uppercase tracking-wider mb-1">
+                              {item.category === "living"
+                                ? "Living Room"
+                                : item.category === "bedrooms"
+                                ? "Bedrooms"
+                                : item.category === "interiors"
+                                ? "Kitchen & Bath"
+                                : "Exteriors"}
+                            </p>
+                            <h4 className="text-neutral-50 font-serif font-semibold text-lg leading-6">
+                              {item.title}
+                            </h4>
+                          </div>
+                          <div className="size-10 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center backdrop-blur-xs">
+                            <Maximize2 className="size-5 text-[#D4AF37]" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
+
+          {/* Lightbox Modal */}
+          {lightboxIndex !== null && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-4">
+              {/* Close Button */}
+              <button
+                onClick={() => setLightboxIndex(null)}
+                className="absolute top-6 right-6 text-neutral-400 hover:text-neutral-50 transition-colors p-2 z-55 cursor-pointer"
+              >
+                <X className="size-8" />
+              </button>
+
+              {/* Previous Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIndex((prev) =>
+                    prev !== null ? (prev - 1 + galleryItems.length) % galleryItems.length : null
+                  );
+                }}
+                className="absolute left-4 sm:left-6 text-neutral-400 hover:text-neutral-50 transition-colors p-2 z-55 bg-neutral-900/50 hover:bg-neutral-900 rounded-full border border-solid border-neutral-800 cursor-pointer"
+              >
+                <ChevronLeft className="size-8" />
+              </button>
+
+              {/* Main Image Container */}
+              <div className="max-w-[90vw] max-h-[80vh] flex flex-col items-center select-none">
+                <img
+                  src={galleryItems[lightboxIndex].src}
+                  alt={galleryItems[lightboxIndex].title}
+                  className="max-w-full max-h-[70vh] object-contain rounded-lg border border-solid border-neutral-800 shadow-2xl"
+                />
+                <div className="mt-4 text-center">
+                  <h4 className="text-neutral-50 font-serif font-semibold text-xl">
+                    {galleryItems[lightboxIndex].title}
+                  </h4>
+                  <p className="text-sm text-[#D4AF37] uppercase tracking-wider mt-1">
+                    {galleryItems[lightboxIndex].category === "living"
+                      ? "Living Room"
+                      : galleryItems[lightboxIndex].category === "bedrooms"
+                      ? "Bedrooms"
+                      : galleryItems[lightboxIndex].category === "interiors"
+                      ? "Kitchen & Bath"
+                      : "Exteriors"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIndex((prev) =>
+                    prev !== null ? (prev + 1) % galleryItems.length : null
+                  );
+                }}
+                className="absolute right-4 sm:right-6 text-neutral-400 hover:text-neutral-50 transition-colors p-2 z-55 bg-neutral-900/50 hover:bg-neutral-900 rounded-full border border-solid border-neutral-800 cursor-pointer"
+              >
+                <ChevronRight className="size-8" />
+              </button>
+            </div>
+          )}
         </section>
-        <section id="location" className="max-w-[1140px] mx-auto px-8 py-20">
+        <section id="location" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
           <div className="text-center mb-12">
             <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
               <span className="bg-[#D4AF37] w-8 h-px" />
@@ -1082,7 +1206,7 @@ export default function App() {
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
               <GraduationCap className="size-5 text-[#D4AF37]" />
               <div>
                 <p className="font-medium text-neutral-50 text-sm leading-5">
@@ -1093,7 +1217,7 @@ export default function App() {
                 </p>
               </div>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
               <Hospital className="size-5 text-[#D4AF37]" />
               <div>
                 <p className="font-medium text-neutral-50 text-sm leading-5">
@@ -1104,7 +1228,7 @@ export default function App() {
                 </p>
               </div>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
               <ShoppingBag className="size-5 text-[#D4AF37]" />
               <div>
                 <p className="font-medium text-neutral-50 text-sm leading-5">
@@ -1115,7 +1239,7 @@ export default function App() {
                 </p>
               </div>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
               <Milestone className="size-5 text-[#D4AF37]" />
               <div>
                 <p className="font-medium text-neutral-50 text-sm leading-5">
@@ -1126,7 +1250,7 @@ export default function App() {
                 </p>
               </div>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
               <TrainFront className="size-5 text-[#D4AF37]" />
               <div>
                 <p className="font-medium text-neutral-50 text-sm leading-5">
@@ -1137,20 +1261,22 @@ export default function App() {
                 </p>
               </div>
             </div>
-            <div className="rounded-xl bg-neutral-900 border-[#D4AF37]/15 border-1 border-solid flex p-4 items-center gap-3">
+            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
               <Plane className="size-5 text-[#D4AF37]" />
               <div>
                 <p className="font-medium text-neutral-50 text-sm leading-5">
                   Airport
                 </p>
-                <p className="text-[#a1a1a1] text-xs leading-4" />
+                <p className="text-[#a1a1a1] text-xs leading-4">
+                  25 min away
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="max-w-[1140px] mx-auto px-8 py-20">
+        <section id="contact" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
           <div className="text-center mb-12">
             <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
               <span className="bg-[#D4AF37] w-8 h-px" />
@@ -1291,7 +1417,7 @@ export default function App() {
                     </p>
                   )}
 
-                  <div className="flex gap-3 mt-1">
+                  <div className="flex flex-col sm:flex-row gap-3 mt-1">
                     <Button
                       type="submit"
                       disabled={contactStatus === "submitting"}
@@ -1320,13 +1446,13 @@ export default function App() {
 
         {/* Footer */}
         <footer className="border-t border-[#D4AF37]/15 bg-neutral-950 pt-16 pb-8">
-          <div className="max-w-[1140px] mx-auto px-8">
+          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
 
             {/* Top grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-12">
 
               {/* Brand */}
-              <div className="col-span-1">
+              <div className="col-span-1 sm:col-span-2 md:col-span-1">
                 <a href="#home" className="flex items-center gap-[11px] mb-4">
                   <img
                     src={vardhamanCrest}
