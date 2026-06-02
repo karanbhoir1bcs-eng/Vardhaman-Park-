@@ -76,13 +76,12 @@ function FadeIn({
   type?: "fade-up" | "fade-down" | "fade-left" | "fade-right" | "scale-up" | "clip-reveal" | "letter-expand";
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isIntersecting, setIsIntersecting] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsIntersecting(true);
+          entry.target.classList.add("is-visible");
           observer.unobserve(entry.target);
         }
       },
@@ -96,28 +95,28 @@ function FadeIn({
     return () => observer.disconnect();
   }, []);
 
-  let animationClasses = "";
+  let initialClasses = "animate-on-scroll";
   switch (type) {
     case "fade-up":
-      animationClasses = isIntersecting ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8";
+      initialClasses += " animate-fade-up";
       break;
     case "fade-down":
-      animationClasses = isIntersecting ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8";
+      initialClasses += " animate-fade-down";
       break;
     case "fade-left":
-      animationClasses = isIntersecting ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8";
+      initialClasses += " animate-fade-left";
       break;
     case "fade-right":
-      animationClasses = isIntersecting ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8";
+      initialClasses += " animate-fade-right";
       break;
     case "scale-up":
-      animationClasses = isIntersecting ? "opacity-100 scale-100" : "opacity-0 scale-95";
+      initialClasses += " animate-scale-up";
       break;
     case "clip-reveal":
-      animationClasses = isIntersecting ? "clip-reveal-active" : "clip-reveal-inactive";
+      initialClasses += " animate-clip-reveal";
       break;
     case "letter-expand":
-      animationClasses = isIntersecting ? "opacity-100 tracking-wide" : "opacity-0 tracking-[0.5em]";
+      initialClasses += " animate-letter-expand";
       break;
   }
 
@@ -128,7 +127,7 @@ function FadeIn({
         transitionDuration: `${duration}ms`,
         transitionDelay: `${delay}ms`,
       }}
-      className={`transition-all ease-out ${animationClasses} ${className}`}
+      className={`${initialClasses} ${className}`}
     >
       {children}
     </div>
@@ -488,12 +487,13 @@ export default function App() {
       {isModalOpen && <BookingModal onClose={() => setIsModalOpen(false)} />}
       <div className="bg-neutral-950 text-neutral-50 w-full min-h-screen overflow-x-hidden">
         <header className="fixed left-0 right-0 top-0 z-50 w-full px-4 py-3 sm:px-8">
-          <div className="max-w-[1180px] flex mx-auto px-5 sm:px-8 justify-between items-center h-16 rounded-[2rem] border border-white/15 bg-neutral-950/55 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+          <div className="max-w-[1180px] flex mx-auto px-5 sm:px-8 justify-between items-center h-16 rounded-[2rem] border border-white/15 bg-neutral-950/95 md:bg-neutral-950/55 shadow-[0_18px_50px_rgba(0,0,0,0.35)] md:backdrop-blur-xl">
             <a href="#home" className="flex items-center gap-[11px] -ml-1 animate-in fade-in slide-in-from-left-4 duration-500 fill-mode-both">
               <img
                 src={vardhamanCrest}
                 alt="Vardhaman Park"
                 className="h-9 w-auto object-contain"
+                decoding="async"
               />
               <span className="font-serif font-semibold text-white text-base sm:text-lg tracking-[1.5px] uppercase mt-0.5">
                 Vardhaman Park
@@ -611,7 +611,7 @@ export default function App() {
           </div>
         )}
         <section id="home" className="relative isolate w-full overflow-hidden px-4 pb-4 pt-4 sm:px-6">
-          <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <div className="absolute inset-0 w-full h-full overflow-hidden" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
             {heroSlides.map((slide, index) => {
               const isActive = index === currentSlide;
 
@@ -619,10 +619,12 @@ export default function App() {
                 <img
                   key={index}
                   alt={`Vardhaman Park luxury residences ${index + 1}`}
-                  className={`size-full object-cover absolute inset-0 transition-all duration-1000 ease-in-out ${
-                    isActive ? "opacity-100 scale-100" : "opacity-0 scale-105"
+                  className={`size-full object-cover absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                    isActive ? "opacity-100" : "opacity-0"
                   }`}
                   src={slide}
+                  decoding="async"
+                  style={{ willChange: 'opacity', backfaceVisibility: 'hidden' }}
                 />
               );
             })}
@@ -632,7 +634,7 @@ export default function App() {
 
           <div className="relative z-30 mx-auto flex min-h-[520px] max-w-[1180px] flex-col justify-start px-4 pb-4 pt-24 sm:min-h-[560px] sm:px-6 sm:pb-6 md:min-h-[600px] md:px-8 md:pb-8">
             <div className="max-w-[790px]">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 md:backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
                 <Star className="size-3.5 text-[#D4AF37]" />
                 <span className="uppercase text-white/90 text-xs leading-4 tracking-[3px]">
                   Pre-Launch | RERA Approved
@@ -646,7 +648,7 @@ export default function App() {
               </p>
             </div>
 
-            <div className="mt-[90px] w-full grid grid-cols-1 gap-2.5 rounded-2xl border border-white/15 bg-black/30 p-3 backdrop-blur-md sm:grid-cols-3 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 fill-mode-both">
+            <div className="mt-[90px] w-full grid grid-cols-1 gap-2.5 rounded-2xl border border-white/15 bg-black/30 p-3 md:backdrop-blur-md sm:grid-cols-3 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 fill-mode-both">
               <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3 flex flex-col justify-center gap-1">
                 <span className="text-xs leading-4 text-white/60">Location</span>
                 <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
@@ -692,9 +694,11 @@ export default function App() {
                   data-blurhash="LJHC7jM|ad%M_N-;j[WWI9M{bIoe"
                   data-photoid="n5RsUiVf5T0"
                   src="https://images.unsplash.com/photo-1611094016919-36b65678f3d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb20lMjBlbGVnYW50fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=800"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
-              <div className="backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl bg-neutral-900/80 border border-solid border-[#D4AF37]/30 absolute right-0 bottom-0 md:-right-6 md:-bottom-6 p-4 md:p-6 animate-in fade-in zoom-in-50 duration-700 delay-500 fill-mode-both">
+              <div className="shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl bg-neutral-900 md:bg-neutral-900/80 md:backdrop-blur-xl border border-solid border-[#D4AF37]/30 absolute right-0 bottom-0 md:-right-6 md:-bottom-6 p-4 md:p-6 animate-in fade-in zoom-in-50 duration-700 delay-500 fill-mode-both">
                 <div className="flex items-center gap-3">
                   <Award className="size-8 text-[#D4AF37]" />
                   <div>
@@ -961,6 +965,8 @@ export default function App() {
                   alt="Vardhaman Park Building"
                   className="object-cover w-full h-72 sm:h-115"
                   src={vardhamanBuilding}
+                  loading="lazy"
+                  decoding="async"
                 />
               </FadeIn>
             </div>
@@ -988,17 +994,19 @@ export default function App() {
                   alt="Master plan"
                   className="object-cover w-full h-72 sm:h-105"
                   src={masterPlan}
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="bg-[#0b0b0b]/50 absolute inset-0" />
                 <div className="left-[28%] top-[35%] flex absolute items-center gap-2">
                   <span className="size-4 animate-pulse shadow-[0_0_15px_rgba(212,175,55,0.8)] rounded-full bg-[#D4AF37] flex justify-center items-center" />
-                  <span className="backdrop-blur-md rounded-full bg-neutral-900/80 text-neutral-50 text-xs leading-4 border border-solid border-[#D4AF37]/40 px-3 py-1">
+                  <span className="rounded-full bg-neutral-900 md:bg-neutral-900/80 md:backdrop-blur-md text-neutral-50 text-xs leading-4 border border-solid border-[#D4AF37]/40 px-3 py-1">
                     Tower A
                   </span>
                 </div>
                 <div className="left-[60%] top-[55%] flex absolute items-center gap-2">
                   <span className="size-4 animate-pulse shadow-[0_0_15px_rgba(212,175,55,0.8)] rounded-full bg-[#D4AF37] flex justify-center items-center" />
-                  <span className="backdrop-blur-md rounded-full bg-neutral-900/80 text-neutral-50 text-xs leading-4 border border-solid border-[#D4AF37]/40 px-3 py-1">
+                  <span className="rounded-full bg-neutral-900 md:bg-neutral-900/80 md:backdrop-blur-md text-neutral-50 text-xs leading-4 border border-solid border-[#D4AF37]/40 px-3 py-1">
                     Clubhouse
                   </span>
                 </div>
@@ -1078,9 +1086,11 @@ export default function App() {
                   data-blurhash="LqI;bfXTJ7e.~VNHW=bFxaIVNat6"
                   data-photoid="MA82mPIZeGI"
                   src="https://images.unsplash.com/photo-1561501900-3701fa6a0864?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxzd2ltbWluZyUyMHBvb2wlMjBsdXh1cnklMjByZXNvcnR8ZW58MXwwfHx8MTc4MDMwNzgxMHww&ixlib=rb-4.1.0&q=80&w=900"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
-                <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
+                <div className="flex absolute left-5 bottom-5 items-center gap-2 bg-[#0b0b0b] md:bg-[#0b0b0b]/60 md:backdrop-blur-md border border-[#D4AF37]/20 rounded-xl px-4 py-2">
                   <Waves className="size-5 text-[#D4AF37]" />
                   <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
                     Infinity Pool
@@ -1098,9 +1108,11 @@ export default function App() {
                   data-blurhash="LOL|S[ITElR+.Sofsmoe}l%MM|od"
                   data-photoid="m27OTMegUyA"
                   src="https://images.unsplash.com/photo-1542766788-a2f588f447ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBneW0lMjBmaXRoZXNzJTIwY2VudGVyJTIwbHV4dXJ5fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=500"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
-                <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
+                <div className="flex absolute left-5 bottom-5 items-center gap-2 bg-[#0b0b0b] md:bg-[#0b0b0b]/60 md:backdrop-blur-md border border-[#D4AF37]/20 rounded-xl px-4 py-2">
                   <Dumbbell className="size-5 text-[#D4AF37]" />
                   <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
                     Fitness Studio
@@ -1118,9 +1130,11 @@ export default function App() {
                   data-blurhash="L683@Zs;0xwc-9I:J8RiTJt7nOIo"
                   data-photoid="yihqkkTw53M"
                   src="https://images.unsplash.com/photo-1584670380670-28f0d4cabb06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjbHViaG91c2UlMjBsb3VuZ2UlMjBpbnRlcmlvcnxlbnwxfDB8fHwxNzgwMzA3ODEwfDA&ixlib=rb-4.1.0&q=80&w=500"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
-                <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
+                <div className="flex absolute left-5 bottom-5 items-center gap-2 bg-[#0b0b0b] md:bg-[#0b0b0b]/60 md:backdrop-blur-md border border-[#D4AF37]/20 rounded-xl px-4 py-2">
                   <Armchair className="size-5 text-[#D4AF37]" />
                   <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
                     Grand Clubhouse
@@ -1138,9 +1152,11 @@ export default function App() {
                   data-blurhash="LZ9[l5o~H?V=o,o$RfaJyEbKaJj="
                   data-photoid="MFN2HPCWXgY"
                   src="https://images.unsplash.com/photo-1626456877396-5af019036c63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsYW5kc2NhcGVkJTIwZ2FyZGVuJTIwcGFyayUyMGdyZWVufGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=900"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
-                <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
+                <div className="flex absolute left-5 bottom-5 items-center gap-2 bg-[#0b0b0b] md:bg-[#0b0b0b]/60 md:backdrop-blur-md border border-[#D4AF37]/20 rounded-xl px-4 py-2">
                   <Trees className="size-5 text-[#D4AF37]" />
                   <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
                     Landscaped Gardens
@@ -1252,6 +1268,7 @@ export default function App() {
                           className="object-cover transition-transform duration-700 w-full h-full group-hover:scale-105"
                           src={item.src}
                           loading="lazy"
+                          decoding="async"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
                           <div className="flex justify-between items-center">
@@ -1311,6 +1328,7 @@ export default function App() {
                   src={galleryItems[lightboxIndex].src}
                   alt={galleryItems[lightboxIndex].title}
                   className="max-w-full max-h-[70vh] object-contain rounded-lg border border-solid border-neutral-800 shadow-2xl"
+                  decoding="async"
                 />
                 <div className="mt-4 text-center">
                   <h4 className="text-neutral-50 font-serif font-semibold text-xl">
@@ -1634,6 +1652,8 @@ export default function App() {
                     src={vardhamanCrest}
                     alt="Vardhaman Park"
                     className="h-10 w-auto object-contain"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <span className="font-serif font-semibold text-white text-lg tracking-[1.5px] uppercase mt-0.5">
                     Vardhaman Park

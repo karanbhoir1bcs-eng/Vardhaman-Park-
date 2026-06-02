@@ -1,26 +1,46 @@
 @import "tailwindcss";
 @import "./tw-animate.css";
 
-/* Smooth scrolling for anchor links */
+/* Smooth scrolling for anchor links and inertia scrolling for mobile devices */
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
 }
 
-/* limit the size of max height elements */
-.h-screen {
-  height: 956px !important;
-}
-.min-h-screen {
-  min-height: 956px !important;
-}
-
-* {
-  scrollbar-width: none;
+/* Isolate the hero section so its carousel repaints don't dirty the scroll layer */
+#home {
+  contain: layout paint;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
-*::-webkit-scrollbar {
-  display: none;
+/* limit the size of max height elements on desktop only */
+@media (min-width: 1024px) {
+  .h-screen {
+    height: 956px !important;
+  }
+  .min-h-screen {
+    min-height: 956px !important;
+  }
+}
+
+/* Hide scrollbars cleanly on HTML, Body, and scrollable elements (explicitly targeted for fast performance) */
+html,
+body,
+.overflow-y-auto,
+.overflow-x-auto,
+.overflow-auto {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
 }
 
 body {
@@ -264,17 +284,58 @@ body {
   border-color: var(--color-border);
 }
 
-/* Premium Text Reveal Animation */
-.clip-reveal-inactive {
-  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-  transform: translateY(24px);
+/* Optimized Scroll Animations */
+.animate-on-scroll {
   opacity: 0;
+  transition-property: opacity, transform, clip-path, letter-spacing;
+  transition-timing-function: ease-out;
+  will-change: opacity, transform; /* Promotes elements to separate layer for compositor speed */
+  backface-visibility: hidden;     /* Removes micro-stutters and jitter during WebKit transformations */
+  perspective: 1000px;
 }
 
-.clip-reveal-active {
+.animate-fade-up {
+  transform: translateY(32px);
+}
+
+.animate-fade-down {
+  transform: translateY(-32px);
+}
+
+.animate-fade-left {
+  transform: translateX(32px);
+}
+
+.animate-fade-right {
+  transform: translateX(-32px);
+}
+
+.animate-scale-up {
+  transform: scale(0.95);
+}
+
+.animate-clip-reveal {
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  transform: translateY(24px);
+}
+
+.animate-letter-expand {
+  letter-spacing: 0.5em;
+}
+
+/* Active visible states */
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+.animate-clip-reveal.is-visible {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   transform: translateY(0);
+}
+
+.animate-letter-expand.is-visible {
   opacity: 1;
-  transition-property: clip-path, transform, opacity;
+  letter-spacing: 0.025em; /* tracking-wide */
 }
 
