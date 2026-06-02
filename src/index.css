@@ -263,3 +263,18 @@ body {
 .border-r {
   border-color: var(--color-border);
 }
+
+/* Premium Text Reveal Animation */
+.clip-reveal-inactive {
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  transform: translateY(24px);
+  opacity: 0;
+}
+
+.clip-reveal-active {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transform: translateY(0);
+  opacity: 1;
+  transition-property: clip-path, transform, opacity;
+}
+

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Armchair,
   Award,
@@ -48,7 +48,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import vardhamanCrest from "@/assets/vardhaman-park-crest.png";
-import luxuryFacade from "@/assets/luxury-facade.jpg";
 import masterPlan from "@/assets/master-plan.jpg";
 import heroBg1 from "@/assets/hero-1.jpg";
 import heroBg2 from "@/assets/hero-2.jpg";
@@ -62,6 +61,79 @@ import galleryBedroom2 from "@/assets/gallery-bedroom-2.jpg";
 
 // Web3Forms Access Key. Get a free key at https://web3forms.com/ to receive submissions in your Gmail.
 const WEB3FORMS_ACCESS_KEY = "c89693eb-c8df-4a6c-9419-f52ba6873523";
+
+function FadeIn({
+  children,
+  delay = 0,
+  duration = 800,
+  className = "",
+  type = "fade-up",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  duration?: number;
+  className?: string;
+  type?: "fade-up" | "fade-down" | "fade-left" | "fade-right" | "scale-up" | "clip-reveal" | "letter-expand";
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.05, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  let animationClasses = "";
+  switch (type) {
+    case "fade-up":
+      animationClasses = isIntersecting ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8";
+      break;
+    case "fade-down":
+      animationClasses = isIntersecting ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8";
+      break;
+    case "fade-left":
+      animationClasses = isIntersecting ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8";
+      break;
+    case "fade-right":
+      animationClasses = isIntersecting ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8";
+      break;
+    case "scale-up":
+      animationClasses = isIntersecting ? "opacity-100 scale-100" : "opacity-0 scale-95";
+      break;
+    case "clip-reveal":
+      animationClasses = isIntersecting ? "clip-reveal-active" : "clip-reveal-inactive";
+      break;
+    case "letter-expand":
+      animationClasses = isIntersecting ? "opacity-100 tracking-wide" : "opacity-0 tracking-[0.5em]";
+      break;
+  }
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        transitionDuration: `${duration}ms`,
+        transitionDelay: `${delay}ms`,
+      }}
+      className={`transition-all ease-out ${animationClasses} ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 function BookingModal({ onClose }: { onClose: () => void }) {
   const [formData, setFormData] = useState({
@@ -417,7 +489,7 @@ export default function App() {
       <div className="bg-neutral-950 text-neutral-50 w-full min-h-screen overflow-x-hidden">
         <header className="fixed left-0 right-0 top-0 z-50 w-full px-4 py-3 sm:px-8">
           <div className="max-w-[1180px] flex mx-auto px-5 sm:px-8 justify-between items-center h-16 rounded-[2rem] border border-white/15 bg-neutral-950/55 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-            <a href="#home" className="flex items-center gap-[11px] -ml-1">
+            <a href="#home" className="flex items-center gap-[11px] -ml-1 animate-in fade-in slide-in-from-left-4 duration-500 fill-mode-both">
               <img
                 src={vardhamanCrest}
                 alt="Vardhaman Park"
@@ -428,29 +500,29 @@ export default function App() {
               </span>
             </a>
             <nav className="hidden md:flex justify-center items-center gap-1 lg:gap-2 md:ml-auto md:mr-6">
-              <a href="#home" className="text-white/90 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
+              <a href="#home" className="text-white/90 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-75 fill-mode-both">
                 Home
               </a>
-              <a href="#about" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
+              <a href="#about" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-100 fill-mode-both">
                 About
               </a>
-              <a href="#project" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
+              <a href="#project" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-150 fill-mode-both">
                 Project
               </a>
-              <a href="#amenities" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
+              <a href="#amenities" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-200 fill-mode-both">
                 Amenities
               </a>
-              <a href="#gallery" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
+              <a href="#gallery" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-300 fill-mode-both">
                 Gallery
               </a>
-              <a href="#location" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
+              <a href="#location" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-500 fill-mode-both">
                 Location
               </a>
-              <a href="#contact" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors">
+              <a href="#contact" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-700 fill-mode-both">
                 Contact
               </a>
             </nav>
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-4 animate-in fade-in slide-in-from-right-4 duration-500 delay-1000 fill-mode-both">
               <Button className="rounded-full bg-white text-[#101010] hover:bg-white/90 px-5 gap-2" onClick={() => setIsModalOpen(true)}>
                 <CalendarCheck className="size-4" />
                 Book Visit
@@ -560,21 +632,21 @@ export default function App() {
 
           <div className="relative z-30 mx-auto flex min-h-[520px] max-w-[1180px] flex-col justify-start px-4 pb-4 pt-24 sm:min-h-[560px] sm:px-6 sm:pb-6 md:min-h-[600px] md:px-8 md:pb-8">
             <div className="max-w-[790px]">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-700 fill-mode-both">
                 <Star className="size-3.5 text-[#D4AF37]" />
                 <span className="uppercase text-white/90 text-xs leading-4 tracking-[3px]">
                   Pre-Launch | RERA Approved
                 </span>
               </div>
-              <h1 className="mt-3 max-w-[780px] font-serif font-semibold text-white text-4xl leading-[1.05] sm:text-5xl md:text-6xl">
+              <h1 className="mt-3 max-w-[780px] font-serif font-semibold text-white text-4xl leading-[1.05] sm:text-5xl md:text-6xl animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-150 fill-mode-both">
                 Discover Elevated Living at Vardhaman Park
               </h1>
-              <p className="mt-4 max-w-xl text-sm sm:text-base leading-6 text-white/80">
+              <p className="mt-4 max-w-xl text-sm sm:text-base leading-6 text-white/80 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 fill-mode-both">
                 Explore premium residences crafted around green views, quiet luxury, and effortless city access.
               </p>
             </div>
 
-            <div className="mt-[90px] w-full grid grid-cols-1 gap-2.5 rounded-2xl border border-white/15 bg-black/30 p-3 backdrop-blur-md sm:grid-cols-3">
+            <div className="mt-[90px] w-full grid grid-cols-1 gap-2.5 rounded-2xl border border-white/15 bg-black/30 p-3 backdrop-blur-md sm:grid-cols-3 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 fill-mode-both">
               <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3 flex flex-col justify-center gap-1">
                 <span className="text-xs leading-4 text-white/60">Location</span>
                 <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
@@ -610,7 +682,7 @@ export default function App() {
         </section>
         <section id="about" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16">
-            <div className="relative">
+            <FadeIn className="relative">
               <div className="rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
                 <img
                   alt="Luxury interior"
@@ -622,7 +694,7 @@ export default function App() {
                   src="https://images.unsplash.com/photo-1611094016919-36b65678f3d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb20lMjBlbGVnYW50fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=800"
                 />
               </div>
-              <div className="backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl bg-neutral-900/80 border border-solid border-[#D4AF37]/30 absolute right-0 bottom-0 md:-right-6 md:-bottom-6 p-4 md:p-6">
+              <div className="backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl bg-neutral-900/80 border border-solid border-[#D4AF37]/30 absolute right-0 bottom-0 md:-right-6 md:-bottom-6 p-4 md:p-6 animate-in fade-in zoom-in-50 duration-700 delay-500 fill-mode-both">
                 <div className="flex items-center gap-3">
                   <Award className="size-8 text-[#D4AF37]" />
                   <div>
@@ -635,243 +707,283 @@ export default function App() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div>
-              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
-                <span className="bg-[#D4AF37] w-8 h-px" />
-                About Vardhaman Park
-              </div>
-              <h2 className="leading-tight font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
-                A Legacy of Elegance, Built for Generations
-              </h2>
-              <p className="leading-relaxed text-[#a1a1a1] mt-5">
-                For over 18 years, Vardhaman Park has redefined the art of
-                luxury living. Each residence is a testament to architectural
-                mastery — where timeless design meets modern innovation, and
-                every detail is crafted to perfection.
-              </p>
+            </FadeIn>
+            <div className="flex flex-col">
+              <FadeIn type="letter-expand" delay={100} duration={600}>
+                <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                  About Vardhaman Park
+                </div>
+              </FadeIn>
+              <FadeIn type="clip-reveal" delay={200} duration={800}>
+                <h2 className="leading-tight font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
+                  A Legacy of Elegance, Built for Generations
+                </h2>
+              </FadeIn>
+              <FadeIn type="fade-up" delay={350} duration={800}>
+                <p className="leading-relaxed text-[#a1a1a1] mt-5">
+                  For over 18 years, Vardhaman Park has redefined the art of
+                  luxury living. Each residence is a testament to architectural
+                  mastery — where timeless design meets modern innovation, and
+                  every detail is crafted to perfection.
+                </p>
+              </FadeIn>
               <div className="grid grid-cols-1 sm:grid-cols-2 mt-8 gap-4">
-                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-lg">
-                  <CardHeader className="p-0 gap-2 flex flex-col">
-                    <Eye className="size-6 text-[#D4AF37]" />
-                    <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
-                      Our Vision
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <p className="text-[#a1a1a1] text-sm leading-5">
-                      To create iconic landmarks that elevate the standard of
-                      premium living across India.
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-lg">
-                  <CardHeader className="p-0 gap-2 flex flex-col">
-                    <Target className="size-6 text-[#D4AF37]" />
-                    <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
-                      Our Mission
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <p className="text-[#a1a1a1] text-sm leading-5">
-                      To deliver homes of enduring value, blending
-                      sustainability with uncompromising luxury.
-                    </p>
-                  </CardContent>
-                </Card>
+                <FadeIn type="scale-up" delay={500} duration={600} className="h-full">
+                  <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-lg h-full">
+                    <CardHeader className="p-0 gap-2 flex flex-col">
+                      <Eye className="size-6 text-[#D4AF37]" />
+                      <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
+                        Our Vision
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <p className="text-[#a1a1a1] text-sm leading-5">
+                        To create iconic landmarks that elevate the standard of
+                        premium living across India.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+                <FadeIn type="scale-up" delay={600} duration={600} className="h-full">
+                  <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-lg h-full">
+                    <CardHeader className="p-0 gap-2 flex flex-col">
+                      <Target className="size-6 text-[#D4AF37]" />
+                      <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
+                        Our Mission
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <p className="text-[#a1a1a1] text-sm leading-5">
+                        To deliver homes of enduring value, blending
+                        sustainability with uncompromising luxury.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
               </div>
             </div>
           </div>
         </section>
         <section id="project" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
           <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
-            <div className="text-center mb-12">
-              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
-                <span className="bg-[#D4AF37] w-8 h-px" />
-                Project Highlights
-                <span className="bg-[#D4AF37] w-8 h-px" />
-              </div>
-              <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
-                Crafted for the Discerning Few
-              </h2>
+            <div className="flex flex-col items-center mb-12">
+              <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
+                <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                  Project Highlights
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                </div>
+              </FadeIn>
+              <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+                <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
+                  Crafted for the Discerning Few
+                </h2>
+              </FadeIn>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
-                <CardHeader className="p-0 gap-3 flex flex-col">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
-                    <MapPin className="size-6 text-[#D4AF37]" />
-                  </div>
-                  <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
-                    Prime Location
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <p className="text-[#a1a1a1] text-sm leading-5">
-                    Strategically nestled in the city's most coveted address
-                    with seamless connectivity.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
-                <CardHeader className="p-0 gap-3 flex flex-col">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
-                    <Maximize className="size-6 text-[#D4AF37]" />
-                  </div>
-                  <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
-                    Spacious Residences
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <p className="text-[#a1a1a1] text-sm leading-5">{`Expansive 2, 3 & 4 BHK homes with grand layouts and panoramic vistas.`}</p>
-                </CardContent>
-              </Card>
-              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
-                <CardHeader className="p-0 gap-3 flex flex-col">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
-                    <Sparkles className="size-6 text-[#D4AF37]" />
-                  </div>
-                  <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
-                    Modern Amenities
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <p className="text-[#a1a1a1] text-sm leading-5">
-                    Over 40 curated amenities crafted for wellness, leisure and
-                    recreation.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
-                <CardHeader className="p-0 gap-3 flex flex-col">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
-                    <Leaf className="size-6 text-[#D4AF37]" />
-                  </div>
-                  <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
-                    Sustainable Living
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <p className="text-[#a1a1a1] text-sm leading-5">
-                    Green-certified design with rainwater harvesting and solar
-                    integration.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
-                <CardHeader className="p-0 gap-3 flex flex-col">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
-                    <ShieldCheck className="size-6 text-[#D4AF37]" />
-                  </div>
-                  <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
-                    24/7 Security
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <p className="text-[#a1a1a1] text-sm leading-5">
-                    Multi-tier security with CCTV surveillance and biometric
-                    access control.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="group transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
-                <CardHeader className="p-0 gap-3 flex flex-col">
-                  <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
-                    <Cpu className="size-6 text-[#D4AF37]" />
-                  </div>
-                  <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
-                    Smart Infrastructure
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <p className="text-[#a1a1a1] text-sm leading-5">
-                    Intelligent home automation and high-speed connectivity
-                    throughout.
-                  </p>
-                </CardContent>
-              </Card>
+              <FadeIn delay={100} duration={600}>
+                <Card className="group h-full transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                  <CardHeader className="p-0 gap-3 flex flex-col">
+                    <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
+                      <MapPin className="size-6 text-[#D4AF37]" />
+                    </div>
+                    <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
+                      Prime Location
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <p className="text-[#a1a1a1] text-sm leading-5">
+                      Strategically nestled in the city's most coveted address
+                      with seamless connectivity.
+                    </p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+              <FadeIn delay={200} duration={600}>
+                <Card className="group h-full transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                  <CardHeader className="p-0 gap-3 flex flex-col">
+                    <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
+                      <Maximize className="size-6 text-[#D4AF37]" />
+                    </div>
+                    <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
+                      Spacious Residences
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <p className="text-[#a1a1a1] text-sm leading-5">{`Expansive 2, 3 & 4 BHK homes with grand layouts and panoramic vistas.`}</p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+              <FadeIn delay={300} duration={600}>
+                <Card className="group h-full transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                  <CardHeader className="p-0 gap-3 flex flex-col">
+                    <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
+                      <Sparkles className="size-6 text-[#D4AF37]" />
+                    </div>
+                    <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
+                      Modern Amenities
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <p className="text-[#a1a1a1] text-sm leading-5">
+                      Over 40 curated amenities crafted for wellness, leisure and
+                      recreation.
+                    </p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+              <FadeIn delay={150} duration={600}>
+                <Card className="group h-full transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                  <CardHeader className="p-0 gap-3 flex flex-col">
+                    <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
+                      <Leaf className="size-6 text-[#D4AF37]" />
+                    </div>
+                    <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
+                      Sustainable Living
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <p className="text-[#a1a1a1] text-sm leading-5">
+                      Green-certified design with rainwater harvesting and solar
+                      integration.
+                    </p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+              <FadeIn delay={250} duration={600}>
+                <Card className="group h-full transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                  <CardHeader className="p-0 gap-3 flex flex-col">
+                    <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
+                      <ShieldCheck className="size-6 text-[#D4AF37]" />
+                    </div>
+                    <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
+                      24/7 Security
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <p className="text-[#a1a1a1] text-sm leading-5">
+                      Multi-tier security with CCTV surveillance and biometric
+                      access control.
+                    </p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+              <FadeIn delay={350} duration={600}>
+                <Card className="group h-full transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-6 flex flex-col gap-3 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)]">
+                  <CardHeader className="p-0 gap-3 flex flex-col">
+                    <div className="size-12 transition-all rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center">
+                      <Cpu className="size-6 text-[#D4AF37]" />
+                    </div>
+                    <CardTitle className="font-serif text-neutral-50 text-xl leading-7">
+                      Smart Infrastructure
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <p className="text-[#a1a1a1] text-sm leading-5">
+                      Intelligent home automation and high-speed connectivity
+                      throughout.
+                    </p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
             </div>
           </div>
         </section>
         <section className="relative py-20 overflow-hidden">
           <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16">
-              <div>
-                <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
-                  <span className="bg-[#D4AF37] w-8 h-px" />
-                  Why Choose Us
-                </div>
-                <h2 className="leading-tight font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
-                  The Distinction of Excellence
-                </h2>
+              <div className="flex flex-col">
+                <FadeIn type="letter-expand" delay={100} duration={600}>
+                  <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
+                    <span className="bg-[#D4AF37] w-8 h-px" />
+                    Why Choose Us
+                  </div>
+                </FadeIn>
+                <FadeIn type="clip-reveal" delay={200} duration={800}>
+                  <h2 className="leading-tight font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
+                    The Distinction of Excellence
+                  </h2>
+                </FadeIn>
                 <div className="flex mt-8 flex-col gap-5">
-                  <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
-                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
-                      <Gem className="size-5 text-[#D4AF37]" />
+                  <FadeIn type="fade-up" delay={300} duration={600}>
+                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
+                        <Gem className="size-5 text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
+                          Uncompromising Quality
+                        </h3>
+                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
+                          Premium imported finishes and craftsmanship in every
+                          corner.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
-                        Uncompromising Quality
-                      </h3>
-                      <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
-                        Premium imported finishes and craftsmanship in every
-                        corner.
-                      </p>
+                  </FadeIn>
+                  <FadeIn type="fade-up" delay={400} duration={600}>
+                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
+                        <Clock className="size-5 text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
+                          On-Time Delivery
+                        </h3>
+                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
+                          A proven record of delivering every project ahead of
+                          schedule.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
-                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
-                      <Clock className="size-5 text-[#D4AF37]" />
+                  </FadeIn>
+                  <FadeIn type="fade-up" delay={500} duration={600}>
+                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
+                        <HandCoins className="size-5 text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
+                          Exceptional Value
+                        </h3>
+                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
+                          Investments that appreciate, designed for lasting
+                          returns.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
-                        On-Time Delivery
-                      </h3>
-                      <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
-                        A proven record of delivering every project ahead of
-                        schedule.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
-                    <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
-                      <HandCoins className="size-5 text-[#D4AF37]" />
-                    </div>
-                    <div>
-                      <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
-                        Exceptional Value
-                      </h3>
-                      <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
-                        Investments that appreciate, designed for lasting
-                        returns.
-                      </p>
-                    </div>
-                  </div>
+                  </FadeIn>
                 </div>
               </div>
-              <div className="relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+              <FadeIn delay={200} className="relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
                 <img
                   alt="Vardhaman Park Building"
                   className="object-cover w-full h-72 sm:h-115"
                   src={vardhamanBuilding}
                 />
-              </div>
+              </FadeIn>
             </div>
           </div>
         </section>
         <section className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
           <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
-            <div className="text-center mb-12">
-              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
-                <span className="bg-[#D4AF37] w-8 h-px" />
-                Master Plan
-                <span className="bg-[#D4AF37] w-8 h-px" />
-              </div>
-              <h2 className="font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
-                A Vision Beautifully Planned
-              </h2>
+            <div className="flex flex-col items-center mb-12">
+              <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
+                <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                  Master Plan
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                </div>
+              </FadeIn>
+              <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+                <h2 className="font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
+                  A Vision Beautifully Planned
+                </h2>
+              </FadeIn>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="col-span-1 lg:col-span-2 relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+              <FadeIn className="col-span-1 lg:col-span-2 relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
                 <img
                   alt="Master plan"
                   className="object-cover w-full h-72 sm:h-105"
@@ -890,181 +1002,212 @@ export default function App() {
                     Clubhouse
                   </span>
                 </div>
-              </div>
+              </FadeIn>
               <div className="flex flex-col gap-4">
-                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
-                  <CardHeader className="p-0 gap-1 flex flex-col">
-                    <Building className="size-6 text-[#D4AF37]" />
-                    <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
-                      8 Premium Towers
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <p className="text-[#a1a1a1] text-sm leading-5">
-                      G+30 storeys with breathtaking skyline views.
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
-                  <CardHeader className="p-0 gap-1 flex flex-col">
-                    <Trees className="size-6 text-[#D4AF37]" />
-                    <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
-                      70% Open Spaces
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <p className="text-[#a1a1a1] text-sm leading-5">
-                      Lush landscaped gardens and walking trails.
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
-                  <CardHeader className="p-0 gap-1 flex flex-col">
-                    <LayoutGrid className="size-6 text-[#D4AF37]" />
-                    <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
-                      Smart Layouts
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <p className="text-[#a1a1a1] text-sm leading-5">
-                      Vastu-compliant homes with optimal ventilation.
-                    </p>
-                  </CardContent>
-                </Card>
+                <FadeIn type="scale-up" delay={150} duration={600}>
+                  <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
+                    <CardHeader className="p-0 gap-1 flex flex-col">
+                      <Building className="size-6 text-[#D4AF37]" />
+                      <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
+                        8 Premium Towers
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <p className="text-[#a1a1a1] text-sm leading-5">
+                        G+30 storeys with breathtaking skyline views.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+                <FadeIn type="scale-up" delay={250} duration={600}>
+                  <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
+                    <CardHeader className="p-0 gap-1 flex flex-col">
+                      <Trees className="size-6 text-[#D4AF37]" />
+                      <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
+                        70% Open Spaces
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <p className="text-[#a1a1a1] text-sm leading-5">
+                        Lush landscaped gardens and walking trails.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+                <FadeIn type="scale-up" delay={350} duration={600}>
+                  <Card className="bg-neutral-900 border border-solid border-[#D4AF37]/20 p-5 flex flex-col gap-2 shadow-md">
+                    <CardHeader className="p-0 gap-1 flex flex-col">
+                      <LayoutGrid className="size-6 text-[#D4AF37]" />
+                      <CardTitle className="font-serif text-neutral-50 text-lg leading-7">
+                        Smart Layouts
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <p className="text-[#a1a1a1] text-sm leading-5">
+                        Vastu-compliant homes with optimal ventilation.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
               </div>
             </div>
           </div>
-        </section>
-        <section id="amenities" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
-          <div className="text-center mb-12">
-            <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
-              <span className="bg-[#D4AF37] w-8 h-px" />
-              World-Class Amenities
-              <span className="bg-[#D4AF37] w-8 h-px" />
-            </div>
-            <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
-              Indulge in Everyday Luxury
-            </h2>
+        </section>        <section id="amenities" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
+          <div className="flex flex-col items-center mb-12">
+            <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
+              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                <span className="bg-[#D4AF37] w-8 h-px" />
+                World-Class Amenities
+                <span className="bg-[#D4AF37] w-8 h-px" />
+              </div>
+            </FadeIn>
+            <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+              <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
+                Indulge in Everyday Luxury
+              </h2>
+            </FadeIn>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="group relative col-span-1 md:col-span-2 rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg">
-              <img
-                alt="Swimming pool"
-                className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
-                data-authorname="Roberto Nickson"
-                data-authorurl="https://unsplash.com/@rpnickson"
-                data-blurhash="LqI;bfXTJ7e.~VNHW=bFxaIVNat6"
-                data-photoid="MA82mPIZeGI"
-                src="https://images.unsplash.com/photo-1561501900-3701fa6a0864?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxzd2ltbWluZyUyMHBvb2wlMjBsdXh1cnklMjByZXNvcnR8ZW58MXwwfHx8MTc4MDMwNzgxMHww&ixlib=rb-4.1.0&q=80&w=900"
-              />
-              <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
-              <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
-                <Waves className="size-5 text-[#D4AF37]" />
-                <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
-                  Infinity Pool
-                </span>
+            <FadeIn type="scale-up" delay={100} duration={700} className="col-span-1 md:col-span-2">
+              <div className="group relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg h-full">
+                <img
+                  alt="Swimming pool"
+                  className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
+                  data-authorname="Roberto Nickson"
+                  data-authorurl="https://unsplash.com/@rpnickson"
+                  data-blurhash="LqI;bfXTJ7e.~VNHW=bFxaIVNat6"
+                  data-photoid="MA82mPIZeGI"
+                  src="https://images.unsplash.com/photo-1561501900-3701fa6a0864?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxzd2ltbWluZyUyMHBvb2wlMjBsdXh1cnklMjByZXNvcnR8ZW58MXwwfHx8MTc4MDMwNzgxMHww&ixlib=rb-4.1.0&q=80&w=900"
+                />
+                <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
+                <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
+                  <Waves className="size-5 text-[#D4AF37]" />
+                  <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
+                    Infinity Pool
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="group relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg">
-              <img
-                alt="Gym"
-                className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
-                data-authorname="gina lin"
-                data-authorurl="https://unsplash.com/@shuttch"
-                data-blurhash="LOL|S[ITElR+.Sofsmoe}l%MM|od"
-                data-photoid="m27OTMegUyA"
-                src="https://images.unsplash.com/photo-1542766788-a2f588f447ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBneW0lMjBmaXRuZXNzJTIwY2VudGVyJTIwbHV4dXJ5fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=500"
-              />
-              <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
-              <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
-                <Dumbbell className="size-5 text-[#D4AF37]" />
-                <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
-                  Fitness Studio
-                </span>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={200} duration={700}>
+              <div className="group relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg h-full">
+                <img
+                  alt="Gym"
+                  className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
+                  data-authorname="gina lin"
+                  data-authorurl="https://unsplash.com/@shuttch"
+                  data-blurhash="LOL|S[ITElR+.Sofsmoe}l%MM|od"
+                  data-photoid="m27OTMegUyA"
+                  src="https://images.unsplash.com/photo-1542766788-a2f588f447ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBneW0lMjBmaXRoZXNzJTIwY2VudGVyJTIwbHV4dXJ5fGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=500"
+                />
+                <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
+                <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
+                  <Dumbbell className="size-5 text-[#D4AF37]" />
+                  <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
+                    Fitness Studio
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="group relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg">
-              <img
-                alt="Clubhouse"
-                className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
-                data-authorname="Pontus Wellgraf"
-                data-authorurl="https://unsplash.com/@wellgraf"
-                data-blurhash="L683@Zs;0xwc-9I:J8RiTJt7nOIo"
-                data-photoid="yihqkkTw53M"
-                src="https://images.unsplash.com/photo-1584670380670-28f0d4cabb06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjbHViaG91c2UlMjBsb3VuZ2UlMjBpbnRlcmlvcnxlbnwxfDB8fHwxNzgwMzA3ODEwfDA&ixlib=rb-4.1.0&q=80&w=500"
-              />
-              <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
-              <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
-                <Armchair className="size-5 text-[#D4AF37]" />
-                <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
-                  Grand Clubhouse
-                </span>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={150} duration={700}>
+              <div className="group relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg h-full">
+                <img
+                  alt="Clubhouse"
+                  className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
+                  data-authorname="Pontus Wellgraf"
+                  data-authorurl="https://unsplash.com/@wellgraf"
+                  data-blurhash="L683@Zs;0xwc-9I:J8RiTJt7nOIo"
+                  data-photoid="yihqkkTw53M"
+                  src="https://images.unsplash.com/photo-1584670380670-28f0d4cabb06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjbHViaG91c2UlMjBsb3VuZ2UlMjBpbnRlcmlvcnxlbnwxfDB8fHwxNzgwMzA3ODEwfDA&ixlib=rb-4.1.0&q=80&w=500"
+                />
+                <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
+                <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
+                  <Armchair className="size-5 text-[#D4AF37]" />
+                  <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
+                    Grand Clubhouse
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="group relative col-span-1 md:col-span-2 rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg">
-              <img
-                alt="Garden"
-                className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
-                data-authorname="Daniel Zopf"
-                data-authorurl="https://unsplash.com/@daniel_zopf"
-                data-blurhash="LZ9[l5o~H?V=o,o$RfaJyEbKaJj="
-                data-photoid="MFN2HPCWXgY"
-                src="https://images.unsplash.com/photo-1626456877396-5af019036c63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsYW5kc2NhcGVkJTIwZ2FyZGVuJTIwcGFyayUyMGdyZWVufGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=900"
-              />
-              <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
-              <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
-                <Trees className="size-5 text-[#D4AF37]" />
-                <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
-                  Landscaped Gardens
-                </span>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={250} duration={700} className="col-span-1 md:col-span-2">
+              <div className="group relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-lg h-full">
+                <img
+                  alt="Garden"
+                  className="object-cover transition-transform duration-700 w-full h-65 group-hover:scale-105"
+                  data-authorname="Daniel Zopf"
+                  data-authorurl="https://unsplash.com/@daniel_zopf"
+                  data-blurhash="LZ9[l5o~H?V=o,o$RfaJyEbKaJj="
+                  data-photoid="MFN2HPCWXgY"
+                  src="https://images.unsplash.com/photo-1626456877396-5af019036c63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODc2NDd8MHwxfHNlYXJjaHwxfHxsYW5kc2NhcGVkJTIwZ2FyZGVuJTIwcGFyayUyMGdyZWVufGVufDF8MHx8fDE3ODAzMDc4MTB8MA&ixlib=rb-4.1.0&q=80&w=900"
+                />
+                <div className="bg-[#0b0b0b]/30 absolute inset-0 transition-all duration-300 group-hover:bg-[#0b0b0b]/10" />
+                <div className="flex absolute left-5 bottom-5 items-center gap-2 backdrop-blur-md bg-[#0b0b0b]/60 border border-[#D4AF37]/20 rounded-xl px-4 py-2">
+                  <Trees className="size-5 text-[#D4AF37]" />
+                  <span className="font-serif font-semibold text-neutral-50 text-xl leading-7">
+                    Landscaped Gardens
+                  </span>
+                </div>
               </div>
-            </div>
+            </FadeIn>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 mt-6 gap-4">
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
-              <Footprints className="size-5 text-[#D4AF37]" />
-              <span className="text-neutral-50 text-sm leading-5">
-                Jogging Track
-              </span>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
-              <Baby className="size-5 text-[#D4AF37]" />
-              <span className="text-neutral-50 text-sm leading-5">
-                Kids Play Area
-              </span>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
-              <ShieldCheck className="size-5 text-[#D4AF37]" />
-              <span className="text-neutral-50 text-sm leading-5">
-                Security
-              </span>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
-              <Car className="size-5 text-[#D4AF37]" />
-              <span className="text-neutral-50 text-sm leading-5">Parking</span>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors">
-              <Users className="size-5 text-[#D4AF37]" />
-              <span className="text-neutral-50 text-sm leading-5">
-                Community Hall
-              </span>
-            </div>
+            <FadeIn type="scale-up" delay={200} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors h-full">
+                <Footprints className="size-5 text-[#D4AF37]" />
+                <span className="text-neutral-50 text-sm leading-5">
+                  Jogging Track
+                </span>
+              </div>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={250} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors h-full">
+                <Baby className="size-5 text-[#D4AF37]" />
+                <span className="text-neutral-50 text-sm leading-5">
+                  Kids Play Area
+                </span>
+              </div>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={300} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors h-full">
+                <ShieldCheck className="size-5 text-[#D4AF37]" />
+                <span className="text-neutral-50 text-sm leading-5">
+                  Security
+                </span>
+              </div>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={350} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors h-full">
+                <Car className="size-5 text-[#D4AF37]" />
+                <span className="text-neutral-50 text-sm leading-5">Parking</span>
+              </div>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={400} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-2 shadow-xs hover:border-[#D4AF37]/35 transition-colors h-full">
+                <Users className="size-5 text-[#D4AF37]" />
+                <span className="text-neutral-50 text-sm leading-5">
+                  Community Hall
+                </span>
+              </div>
+            </FadeIn>
           </div>
         </section>
         <section id="gallery" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
           <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
-            <div className="text-center mb-12">
-              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
-                <span className="bg-[#D4AF37] w-8 h-px" />
-                Gallery
-                <span className="bg-[#D4AF37] w-8 h-px" />
-              </div>
-              <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10 mb-8">
-                Glimpses of Grandeur
-              </h2>
+            <div className="flex flex-col items-center mb-12">
+              <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
+                <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                  Gallery
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                </div>
+              </FadeIn>
+              <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+                <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10 mb-8">
+                  Glimpses of Grandeur
+                </h2>
+              </FadeIn>
 
               {/* Gallery Filter Tabs */}
-              <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-10">
+              <FadeIn type="fade-up" delay={300} duration={600} className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-10">
                 {[
                   { id: "all", label: "All" },
                   { id: "living", label: "Living Room" },
@@ -1084,49 +1227,55 @@ export default function App() {
                     {tab.label}
                   </button>
                 ))}
-              </div>
+              </FadeIn>
             </div>
 
             {/* Gallery Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {galleryItems
                 .filter((item) => galleryFilter === "all" || item.category === galleryFilter)
-                .map((item) => {
+                .map((item, index) => {
                   const originalIndex = galleryItems.findIndex((g) => g.id === item.id);
                   return (
-                    <div
+                    <FadeIn
                       key={item.id}
-                      onClick={() => setLightboxIndex(originalIndex)}
-                      className="group relative cursor-pointer aspect-[4/3] rounded-2xl border border-solid border-[#D4AF37]/15 overflow-hidden shadow-md bg-neutral-900"
+                      type="scale-up"
+                      delay={50 * (index % 6)}
+                      duration={500}
                     >
-                      <img
-                        alt={item.title}
-                        className="object-cover transition-transform duration-700 w-full h-full group-hover:scale-105"
-                        src={item.src}
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <p className="text-xs text-[#D4AF37] font-semibold uppercase tracking-wider mb-1">
-                              {item.category === "living"
-                                ? "Living Room"
-                                : item.category === "bedrooms"
-                                ? "Bedrooms"
-                                : item.category === "interiors"
-                                ? "Kitchen & Bath"
-                                : "Exteriors"}
-                            </p>
-                            <h4 className="text-neutral-50 font-serif font-semibold text-lg leading-6">
-                              {item.title}
-                            </h4>
-                          </div>
-                          <div className="size-10 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center backdrop-blur-xs">
-                            <Maximize2 className="size-5 text-[#D4AF37]" />
+                      <div
+                        onClick={() => setLightboxIndex(originalIndex)}
+                        className="group relative cursor-pointer aspect-[4/3] rounded-2xl border border-solid border-[#D4AF37]/15 overflow-hidden shadow-md bg-neutral-900 animate-in fade-in zoom-in-95 duration-300"
+                      >
+                        <img
+                          alt={item.title}
+                          className="object-cover transition-transform duration-700 w-full h-full group-hover:scale-105"
+                          src={item.src}
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <p className="text-xs text-[#D4AF37] font-semibold uppercase tracking-wider mb-1">
+                                {item.category === "living"
+                                  ? "Living Room"
+                                  : item.category === "bedrooms"
+                                  ? "Bedrooms"
+                                  : item.category === "interiors"
+                                  ? "Kitchen & Bath"
+                                  : "Exteriors"}
+                              </p>
+                              <h4 className="text-neutral-50 font-serif font-semibold text-lg leading-6">
+                                {item.title}
+                              </h4>
+                            </div>
+                            <div className="size-10 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center backdrop-blur-xs">
+                              <Maximize2 className="size-5 text-[#D4AF37]" />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </FadeIn>
                   );
                 })}
             </div>
@@ -1195,140 +1344,167 @@ export default function App() {
           )}
         </section>
         <section id="location" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
-          <div className="text-center mb-12">
-            <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
-              <span className="bg-[#D4AF37] w-8 h-px" />
-              Location Advantage
-              <span className="bg-[#D4AF37] w-8 h-px" />
-            </div>
-            <h2 className="font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
-              Connected to Everything That Matters
-            </h2>
+          <div className="flex flex-col items-center mb-12">
+            <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
+              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                <span className="bg-[#D4AF37] w-8 h-px" />
+                Location Advantage
+                <span className="bg-[#D4AF37] w-8 h-px" />
+              </div>
+            </FadeIn>
+            <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+              <h2 className="font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
+                Connected to Everything That Matters
+              </h2>
+            </FadeIn>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
-              <GraduationCap className="size-5 text-[#D4AF37]" />
-              <div>
-                <p className="font-medium text-neutral-50 text-sm leading-5">
-                  Top Schools
-                </p>
-                <p className="text-[#a1a1a1] text-xs leading-4">
-                  5 min away
-                </p>
+            <FadeIn type="scale-up" delay={100} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
+                <GraduationCap className="size-5 text-[#D4AF37]" />
+                <div>
+                  <p className="font-medium text-neutral-50 text-sm leading-5">
+                    Top Schools
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs leading-4">
+                    5 min away
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
-              <Hospital className="size-5 text-[#D4AF37]" />
-              <div>
-                <p className="font-medium text-neutral-50 text-sm leading-5">
-                  Hospitals
-                </p>
-                <p className="text-[#a1a1a1] text-xs leading-4">
-                  8 min away
-                </p>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={150} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
+                <Hospital className="size-5 text-[#D4AF37]" />
+                <div>
+                  <p className="font-medium text-neutral-50 text-sm leading-5">
+                    Hospitals
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs leading-4">
+                    8 min away
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
-              <ShoppingBag className="size-5 text-[#D4AF37]" />
-              <div>
-                <p className="font-medium text-neutral-50 text-sm leading-5">
-                  Shopping Malls
-                </p>
-                <p className="text-[#a1a1a1] text-xs leading-4">
-                  10 min away
-                </p>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={200} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
+                <ShoppingBag className="size-5 text-[#D4AF37]" />
+                <div>
+                  <p className="font-medium text-neutral-50 text-sm leading-5">
+                    Shopping Malls
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs leading-4">
+                    10 min away
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
-              <Milestone className="size-5 text-[#D4AF37]" />
-              <div>
-                <p className="font-medium text-neutral-50 text-sm leading-5">
-                  Highway
-                </p>
-                <p className="text-[#a1a1a1] text-xs leading-4">
-                  3 min away
-                </p>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={250} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
+                <Milestone className="size-5 text-[#D4AF37]" />
+                <div>
+                  <p className="font-medium text-neutral-50 text-sm leading-5">
+                    Highway
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs leading-4">
+                    3 min away
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
-              <TrainFront className="size-5 text-[#D4AF37]" />
-              <div>
-                <p className="font-medium text-neutral-50 text-sm leading-5">
-                  Railway Station
-                </p>
-                <p className="text-[#a1a1a1] text-xs leading-4">
-                  12 min away
-                </p>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={300} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
+                <TrainFront className="size-5 text-[#D4AF37]" />
+                <div>
+                  <p className="font-medium text-neutral-50 text-sm leading-5">
+                    Railway Station
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs leading-4">
+                    12 min away
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors">
-              <Plane className="size-5 text-[#D4AF37]" />
-              <div>
-                <p className="font-medium text-neutral-50 text-sm leading-5">
-                  Airport
-                </p>
-                <p className="text-[#a1a1a1] text-xs leading-4">
-                  25 min away
-                </p>
+            </FadeIn>
+            <FadeIn type="scale-up" delay={350} duration={500}>
+              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
+                <Plane className="size-5 text-[#D4AF37]" />
+                <div>
+                  <p className="font-medium text-neutral-50 text-sm leading-5">
+                    Airport
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs leading-4">
+                    25 min away
+                  </p>
+                </div>
               </div>
-            </div>
+            </FadeIn>
           </div>
         </section>
 
-        {/* Contact Section */}
         <section id="contact" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
-          <div className="text-center mb-12">
-            <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-3 items-center gap-2">
-              <span className="bg-[#D4AF37] w-8 h-px" />
-              Get In Touch
-              <span className="bg-[#D4AF37] w-8 h-px" />
-            </div>
-            <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
-              We'd Love to Hear From You
-            </h2>
-            <p className="text-[#a1a1a1] mt-3 max-w-xl mx-auto text-sm leading-6">
-              Reach out to our luxury consultants for pricing, site visits, or any queries about Vardhaman Park.
-            </p>
+          <div className="flex flex-col items-center mb-12">
+            <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
+              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                <span className="bg-[#D4AF37] w-8 h-px" />
+                Get In Touch
+                <span className="bg-[#D4AF37] w-8 h-px" />
+              </div>
+            </FadeIn>
+            <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+              <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
+                We'd Love to Hear From You
+              </h2>
+            </FadeIn>
+            <FadeIn type="fade-up" delay={300} duration={800} className="text-center mt-3">
+              <p className="text-[#a1a1a1] max-w-xl mx-auto text-sm leading-6">
+                Reach out to our luxury consultants for pricing, site visits, or any queries about Vardhaman Park.
+              </p>
+            </FadeIn>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Info Cards */}
             <div className="flex flex-col gap-5 col-span-1">
-              <div className="rounded-2xl bg-neutral-900 border border-[#D4AF37]/20 p-6 flex items-start gap-4">
-                <div className="size-12 shrink-0 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center">
-                  <MapPin className="size-5 text-[#D4AF37]" />
+              <FadeIn type="fade-right" delay={150} duration={600}>
+                <div className="rounded-2xl bg-neutral-900 border border-[#D4AF37]/20 p-6 flex items-start gap-4 h-full">
+                  <div className="size-12 shrink-0 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center">
+                    <MapPin className="size-5 text-[#D4AF37]" />
+                  </div>
+                  <div>
+                    <p className="font-serif font-semibold text-neutral-50 text-base mb-1">Visit Us</p>
+                    <p className="text-[#a1a1a1] text-sm leading-5">Vardhaman Park, Sector 12,<br />New Delhi – 110 001, India</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-serif font-semibold text-neutral-50 text-base mb-1">Visit Us</p>
-                  <p className="text-[#a1a1a1] text-sm leading-5">Vardhaman Park, Sector 12,<br />New Delhi – 110 001, India</p>
+              </FadeIn>
+              <FadeIn type="fade-right" delay={250} duration={600}>
+                <div className="rounded-2xl bg-neutral-900 border border-[#D4AF37]/20 p-6 flex items-start gap-4 h-full">
+                  <div className="size-12 shrink-0 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center">
+                    <Phone className="size-5 text-[#D4AF37]" />
+                  </div>
+                  <div>
+                    <p className="font-serif font-semibold text-neutral-50 text-base mb-1">Call Us</p>
+                    <a href="tel:+911234567890" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">+91 12345 67890</a>
+                    <br />
+                    <a href="tel:+910987654321" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">+91 09876 54321</a>
+                  </div>
                 </div>
-              </div>
-              <div className="rounded-2xl bg-neutral-900 border border-[#D4AF37]/20 p-6 flex items-start gap-4">
-                <div className="size-12 shrink-0 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center">
-                  <Phone className="size-5 text-[#D4AF37]" />
+              </FadeIn>
+              <FadeIn type="fade-right" delay={350} duration={600}>
+                <div className="rounded-2xl bg-neutral-900 border border-[#D4AF37]/20 p-6 flex items-start gap-4 h-full">
+                  <div className="size-12 shrink-0 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center">
+                    <Mail className="size-5 text-[#D4AF37]" />
+                  </div>
+                  <div>
+                    <p className="font-serif font-semibold text-neutral-50 text-base mb-1">Email Us</p>
+                    <a href="mailto:info@vardhamanpark.com" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">info@vardhamanpark.com</a>
+                    <br />
+                    <a href="mailto:sales@vardhamanpark.com" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">sales@vardhamanpark.com</a>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-serif font-semibold text-neutral-50 text-base mb-1">Call Us</p>
-                  <a href="tel:+911234567890" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">+91 12345 67890</a>
-                  <br />
-                  <a href="tel:+910987654321" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">+91 09876 54321</a>
-                </div>
-              </div>
-              <div className="rounded-2xl bg-neutral-900 border border-[#D4AF37]/20 p-6 flex items-start gap-4">
-                <div className="size-12 shrink-0 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center">
-                  <Mail className="size-5 text-[#D4AF37]" />
-                </div>
-                <div>
-                  <p className="font-serif font-semibold text-neutral-50 text-base mb-1">Email Us</p>
-                  <a href="mailto:info@vardhamanpark.com" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">info@vardhamanpark.com</a>
-                  <br />
-                  <a href="mailto:sales@vardhamanpark.com" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">sales@vardhamanpark.com</a>
-                </div>
-              </div>
+              </FadeIn>
             </div>
 
             {/* Contact Form */}
-            <div className="col-span-1 lg:col-span-2 rounded-3xl bg-neutral-900 border border-[#D4AF37]/20 p-8">
+            <FadeIn type="fade-left" delay={250} className="col-span-1 lg:col-span-2 rounded-3xl bg-neutral-900 border border-[#D4AF37]/20 p-8">
               <h3 className="font-serif font-semibold text-neutral-50 text-2xl mb-6">Send Us a Message</h3>
               {contactStatus === "success" ? (
                 <div className="text-center py-12 flex flex-col items-center gap-4">
@@ -1440,7 +1616,7 @@ export default function App() {
                   </div>
                 </form>
               )}
-            </div>
+            </FadeIn>
           </div>
         </section>
 
