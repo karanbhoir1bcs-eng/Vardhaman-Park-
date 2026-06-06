@@ -339,3 +339,32 @@ body {
   letter-spacing: 0.025em; /* tracking-wide */
 }
 
+/* ── HERO BACKGROUND CROSSFADE SLIDER ────────────────────────────
+   Each image is stacked absolutely. Only the active slide is
+   opacity:1; all others are opacity:0. A CSS transition handles
+   the smooth 1.2s crossfade between slides.
+   GPU-accelerated via opacity + will-change. Reduced-motion safe.
+──────────────────────────────────────────────────────────────── */
+.hero-bg-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  will-change: opacity;
+  backface-visibility: hidden;
+}
+
+.hero-bg-slide.active {
+  opacity: 1;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-slide {
+    transition: none;
+  }
+}

@@ -3,17 +3,20 @@ import {
   Armchair,
   Award,
   Baby,
+  BookOpen,
   Building,
   Building2,
+  BusFront,
   CalendarCheck,
   Car,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Clock,
-  Compass,
   Cpu,
   Dumbbell,
   Eye,
+  Flower2,
   Footprints,
   Gem,
   GraduationCap,
@@ -31,36 +34,52 @@ import {
   MessageSquare,
   Milestone,
   Phone,
-  Plane,
   ShieldCheck,
   ShoppingBag,
+  ShoppingCart,
   Sparkles,
   Star,
+  Store,
+  Sunset,
+  Swords,
   Target,
   TrainFront,
   Trees,
   User,
   Users,
+  Utensils,
   Waves,
+  Wind,
   X,
+  ZoomIn,
   Menu,
+  Facebook,
+  Instagram,
+  Youtube,
+  Linkedin,
 } from "lucide-react";
+import GeoSummary from "./components/GeoSummary";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import vardhamanCrest from "@/assets/vardhaman-park-crest.png";
-import masterPlan from "@/assets/master-plan.jpg";
-import heroBg1 from "@/assets/hero-1.jpg";
-import heroBg2 from "@/assets/hero-2.jpg";
-import heroBg3 from "@/assets/hero-3.jpg";
-import heroCityscape from "@/assets/hero-cityscape.jpg";
+import masterPlan from "@/assets/master-plan-new.jpg";
 import vardhamanBuilding from "@/assets/vardhaman-building.jpg";
+
+import hero2 from "@/assets/hero-2.jpg";
+import hero3 from "@/assets/hero-3.jpg";
+import heroNew from "@/assets/hero-new.jpg";
+import heroCityscapeNew from "@/assets/hero-cityscape-new.jpg";
+// TODO: Place your new images in src/assets/ and import them here like this:
+// import hero1 from "@/assets/your-new-hero-1.jpg";
+// import hero2 from "@/assets/your-new-hero-2.jpg";
 import galleryLiving1 from "@/assets/gallery-living-1.jpg";
 import galleryBedroom1 from "@/assets/gallery-bedroom-1.jpg";
 import galleryLiving2 from "@/assets/gallery-living-2.jpg";
 import galleryBedroom2 from "@/assets/gallery-bedroom-2.jpg";
-
-// Web3Forms Access Key. Get a free key at https://web3forms.com/ to receive submissions in your Gmail.
-const WEB3FORMS_ACCESS_KEY = "c89693eb-c8df-4a6c-9419-f52ba6873523";
+import FAQ from "./sections/FAQ";
+import Footer from "./sections/Footer";// Google Apps Script endpoint – submissions go directly to your Google Sheets.
+// Replace the URL below with your deployed Google Apps Script Web App URL.
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_DbLdcNXUxruq9BvMwflDQC6-jDqhHpdVQedRXsZKn4D0jmdiZ9VjvkgFd1K48A/exec";
 
 function FadeIn({
   children,
@@ -139,6 +158,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
     name: "",
     phone: "",
     email: "",
+    project: "Park 2.0 Phase 2",
     date: "",
     message: "",
   });
@@ -154,31 +174,18 @@ function BookingModal({ onClose }: { onClose: () => void }) {
     setStatus("submitting");
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const formBody = new FormData();
+      Object.keys(formData).forEach((key) => formBody.append(key, formData[key as keyof typeof formData]));
+
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: "New Site Visit Booking - Vardhaman Park",
-          from_name: "Vardhaman Park Website",
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          date: formData.date,
-          message: formData.message,
-        }),
+        body: formBody,
+        mode: "no-cors",
       });
 
-      const data = await response.json();
-      if (data.success) {
-        setStatus("success");
-        setFormData({ name: "", phone: "", email: "", date: "", message: "" });
-      } else {
-        setStatus("error");
-      }
+      // When using no-cors, the response is opaque, so we assume success if no network error is thrown.
+      setStatus("success");
+      setFormData({ name: "", phone: "", email: "", project: "Park 2.0 Phase 2", date: "", message: "" });
     } catch (error) {
       console.error("Form submit error:", error);
       setStatus("error");
@@ -217,7 +224,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
             Schedule a Private Tour
           </h2>
           <p className="text-[#a1a1a1] text-sm mt-2 leading-relaxed">
-            Experience the elegance of Vardhaman Park in person.<br />
+            Experience the elegance of Park 2.0 Phase 2 in person.<br />
             Reserve an exclusive guided tour with our luxury consultants.
           </p>
         </div>
@@ -419,25 +426,54 @@ export default function App() {
   const [galleryFilter, setGalleryFilter] = useState("all");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const heroSlides = [
-    heroCityscape,
-    vardhamanBuilding,
-    heroBg1,
-    heroBg2,
-    heroBg3,
+  // Hero background images — autoplay crossfade slider
+  const heroImages = [vardhamanBuilding, hero2, hero3, heroNew, heroCityscapeNew];
+  const [floorPlanGallery, setFloorPlanGallery] = useState<{ images: { src: string; alt: string; label: string }[]; index: number } | null>(null);
+
+  // Image sets for floor plan galleries — SEO-optimized alt tags for Google, AEO & GEO
+  const bhk1Images = [
+    { src: '/1bhk-plan.jpg',           alt: '1 BHK Apartment Floor Plan Layout at Park 2.0 Phase 2 Shahad Kalyan – 425 to 475 sq ft Vastu Compliant Design with Bedroom Kitchen Living Room and Patio', label: '1 BHK Floor Plan' },
+    { src: '/typical-floor-plan.jpg',  alt: 'Park 2.0 Phase 2 Typical Floor Plan Drawing with Room Dimensions – 1 BHK and 2 BHK Apartment Layouts Showing All Unit Configurations on Each Floor', label: 'Typical Floor Plan' },
+    { src: '/building-elevation.jpg',  alt: 'Park 2.0 Phase 2 Residential Tower Front Elevation – Premium High-Rise Apartments in Shahad Mumbai with Modern Architecture and Balconies', label: 'Building Elevation' },
+    { src: '/aerial-view.jpg',         alt: 'Park 2.0 Phase 2 Aerial Bird Eye View – Luxury Housing Project in Shahad Mumbai with Sports Court Children Play Area Landscaped Gardens and Parking', label: 'Aerial Site View' },
   ];
 
+  const bhk2Images = [
+    { src: '/2bhk-plan.jpg',           alt: '2 BHK Apartment Floor Plan Layout at Park 2.0 Phase 2 Shahad Kalyan – 650 to 720 sq ft Vastu Compliant Design with Master Bedroom Second Bedroom Kitchen Living Room and Patio', label: '2 BHK Floor Plan' },
+    { src: '/typical-floor-plan.jpg',  alt: 'Park 2.0 Phase 2 Typical Floor Plan Drawing with Room Dimensions – 1 BHK and 2 BHK Apartment Layouts Showing All Unit Configurations on Each Floor', label: 'Typical Floor Plan' },
+    { src: '/building-elevation.jpg',  alt: 'Park 2.0 Phase 2 Residential Tower Front Elevation – Premium High-Rise Apartments in Shahad Mumbai with Modern Architecture and Balconies', label: 'Building Elevation' },
+    { src: '/aerial-view.jpg',         alt: 'Park 2.0 Phase 2 Aerial Bird Eye View – Luxury Housing Project in Shahad Mumbai with Sports Court Children Play Area Landscaped Gardens and Parking', label: 'Aerial Site View' },
+  ];
+
+  // Keyboard navigation for floor plan gallery
+  useEffect(() => {
+    if (!floorPlanGallery) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setFloorPlanGallery(null); }
+      else if (e.key === 'ArrowRight') { setFloorPlanGallery(prev => prev ? { ...prev, index: (prev.index + 1) % prev.images.length } : null); }
+      else if (e.key === 'ArrowLeft') { setFloorPlanGallery(prev => prev ? { ...prev, index: (prev.index - 1 + prev.images.length) % prev.images.length } : null); }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [floorPlanGallery]);
+  const [expandedService, setExpandedService] = useState<string | null>(null);
+  const toggleService = (key: string) => setExpandedService((prev) => (prev === key ? null : key));
+
+  // Autoplay: advance slide every 4 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 3000);
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
     return () => clearInterval(timer);
-  }, [heroSlides.length]);
+  }, [heroImages.length]);
+
 
   const [contactData, setContactData] = useState({
     name: "",
     phone: "",
     email: "",
+    project: "Park 2.0 Phase 2",
+    date: "",
     message: "",
   });
   const [contactStatus, setContactStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -452,30 +488,18 @@ export default function App() {
     setContactStatus("submitting");
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const formBody = new FormData();
+      Object.keys(contactData).forEach((key) => formBody.append(key, contactData[key as keyof typeof contactData]));
+
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: "New General Inquiry - Vardhaman Park",
-          from_name: "Vardhaman Park Contact Form",
-          name: contactData.name,
-          phone: contactData.phone,
-          email: contactData.email,
-          message: contactData.message,
-        }),
+        body: formBody,
+        mode: "no-cors",
       });
 
-      const data = await response.json();
-      if (data.success) {
-        setContactStatus("success");
-        setContactData({ name: "", phone: "", email: "", message: "" });
-      } else {
-        setContactStatus("error");
-      }
+      // When using no-cors, the response is opaque, so we assume success if no network error is thrown.
+      setContactStatus("success");
+      setContactData({ name: "", phone: "", email: "", project: "Park 2.0 Phase 2", date: "", message: "" });
     } catch (error) {
       console.error("Contact Form submit error:", error);
       setContactStatus("error");
@@ -486,12 +510,31 @@ export default function App() {
     <div>
       {isModalOpen && <BookingModal onClose={() => setIsModalOpen(false)} />}
       <div className="bg-neutral-950 text-neutral-50 w-full min-h-screen overflow-x-hidden">
+        {/* Global RealEstateAgent Schema for GEO & SEO */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "RealEstateAgent",
+          "name": "Vardhaman Developers",
+          "image": "https://vardhamanpark.com/logo.png",
+          "@id": "https://vardhamanpark.com",
+          "url": "https://vardhamanpark.com",
+          "telephone": "+911234567890",
+          "priceRange": "$$$",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Park 2.0 Phase 2, Dhakate Shahad",
+            "addressLocality": "Kalyan",
+            "addressRegion": "Maharashtra",
+            "postalCode": "421103",
+            "addressCountry": "IN"
+          }
+        })}} />
         <header className="fixed left-0 right-0 top-0 z-50 w-full px-4 py-3 sm:px-8">
           <div className="max-w-[1180px] flex mx-auto px-5 sm:px-8 justify-between items-center h-16 rounded-[2rem] border border-white/15 bg-neutral-950/95 md:bg-neutral-950/55 shadow-[0_18px_50px_rgba(0,0,0,0.35)] md:backdrop-blur-xl">
             <a href="#home" className="flex items-center gap-[11px] -ml-1 animate-in fade-in slide-in-from-left-4 duration-500 fill-mode-both">
               <img
                 src={vardhamanCrest}
-                alt="Vardhaman Park"
+                alt="Park 2.0 Phase 2"
                 className="h-9 w-auto object-contain"
                 decoding="async"
               />
@@ -506,11 +549,14 @@ export default function App() {
               <a href="#about" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-100 fill-mode-both">
                 About
               </a>
-              <a href="#project" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-150 fill-mode-both">
-                Project
+              <a href="#highlights" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-150 fill-mode-both">
+                Highlights
               </a>
-              <a href="#amenities" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-200 fill-mode-both">
-                Amenities
+              <a href="#lifestyle" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-200 fill-mode-both">
+                Lifestyle
+              </a>
+              <a href="#floor-plans" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-250 fill-mode-both">
+                Plans
               </a>
               <a href="#gallery" className="text-white/80 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-300 fill-mode-both">
                 Gallery
@@ -533,6 +579,7 @@ export default function App() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="flex md:hidden p-2 text-neutral-50 hover:bg-white/10 rounded-full transition-colors border-0 bg-transparent cursor-pointer"
+              aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
             </button>
@@ -559,20 +606,28 @@ export default function App() {
               About
             </a>
             <a
-              href="#project"
+              href="#highlights"
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-[#a1a1a1] text-base font-medium py-2 border-b border-neutral-850 hover:text-neutral-50 flex items-center gap-2"
             >
               <Building2 className="size-5" />
-              Project
+              Highlights
             </a>
             <a
-              href="#amenities"
+              href="#lifestyle"
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-[#a1a1a1] text-base font-medium py-2 border-b border-neutral-850 hover:text-neutral-50 flex items-center gap-2"
             >
               <Sparkles className="size-5" />
-              Amenities
+              Lifestyle
+            </a>
+            <a
+              href="#floor-plans"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-[#a1a1a1] text-base font-medium py-2 border-b border-neutral-850 hover:text-neutral-50 flex items-center gap-2"
+            >
+              <LayoutGrid className="size-5" />
+              Plans
             </a>
             <a
               href="#gallery"
@@ -611,23 +666,18 @@ export default function App() {
           </div>
         )}
         <section id="home" className="relative isolate w-full overflow-hidden px-4 pb-4 pt-4 sm:px-6">
-          <div className="absolute inset-0 w-full h-full overflow-hidden" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
-            {heroSlides.map((slide, index) => {
-              const isActive = index === currentSlide;
-
-              return (
-                <img
-                  key={index}
-                  alt={`Vardhaman Park luxury residences ${index + 1}`}
-                  className={`size-full object-cover absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                    isActive ? "opacity-100" : "opacity-0"
-                  }`}
-                  src={slide}
-                  decoding="async"
-                  style={{ willChange: 'opacity', backfaceVisibility: 'hidden' }}
-                />
-              );
-            })}
+          {/* Crossfade background image slider – one image at a time */}
+          <div className="absolute inset-0 w-full h-full overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+            {heroImages.map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                alt={`Park 2.0 Phase 2 luxury residences ${i + 1}`}
+                className={`hero-bg-slide${i === currentSlide ? ' active' : ''}`}
+                decoding="async"
+                loading={i === 0 ? undefined : "lazy"}
+              />
+            ))}
           </div>
           <div className="absolute inset-0 z-20 bg-[linear-gradient(90deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.48)_48%,rgba(0,0,0,0.32)_100%)]" />
           <div className="absolute inset-0 z-20 bg-black/20" />
@@ -641,48 +691,49 @@ export default function App() {
                 </span>
               </div>
               <h1 className="mt-3 max-w-[780px] font-serif font-semibold text-white text-4xl leading-[1.05] sm:text-5xl md:text-6xl animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-150 fill-mode-both">
-                Discover Elevated Living at Vardhaman Park
+                Discover Elevated Living at Park 2.0 Phase 2
               </h1>
               <p className="mt-4 max-w-xl text-sm sm:text-base leading-6 text-white/80 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 fill-mode-both">
                 Explore premium residences crafted around green views, quiet luxury, and effortless city access.
               </p>
             </div>
 
-            <div className="mt-[90px] w-full grid grid-cols-1 gap-2.5 rounded-2xl border border-white/15 bg-black/30 p-3 md:backdrop-blur-md sm:grid-cols-3 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 fill-mode-both">
-              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3 flex flex-col justify-center gap-1">
-                <span className="text-xs leading-4 text-white/60">Location</span>
-                <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
-                  <option className="bg-neutral-950 text-white">New Delhi</option>
-                  <option className="bg-neutral-950 text-white">Mumbai</option>
-                  <option className="bg-neutral-950 text-white">Pune</option>
-                </select>
-              </label>
-              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3 flex flex-col justify-center gap-1">
-                <span className="text-xs leading-4 text-white/60">Property</span>
-                <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
-                  <option className="bg-neutral-950 text-white">Luxury Apartment</option>
-                  <option className="bg-neutral-950 text-white">Penthouse</option>
-                  <option className="bg-neutral-950 text-white">Garden Residence</option>
-                </select>
-              </label>
-              <label className="min-w-0 rounded-xl border border-white/15 bg-black/20 px-4 py-3 flex flex-col justify-center gap-1">
-                <span className="text-xs leading-4 text-white/60">Price Range</span>
-                <select className="mt-1 w-full bg-transparent text-white text-sm font-medium outline-none">
-                  <option className="bg-neutral-950 text-white">Rs. 1.8 Cr - Rs. 3.5 Cr</option>
-                  <option className="bg-neutral-950 text-white">Rs. 3.5 Cr - Rs. 5 Cr</option>
-                  <option className="bg-neutral-950 text-white">Rs. 5 Cr+</option>
-                </select>
-              </label>
-              <Button asChild className="sm:col-span-3 min-h-[56px] rounded-xl bg-white px-7 text-[#101010] hover:bg-[#D4AF37] hover:text-[#0B0B0B] transition-colors gap-2 font-semibold">
-                <a href="#project" className="flex items-center justify-center gap-2">
-                  <Compass className="size-4" />
-                  Find Now
-                </a>
+            <div className="mt-[60px] w-full max-w-2xl rounded-2xl border border-white/15 bg-black/40 p-6 md:backdrop-blur-md animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 fill-mode-both flex flex-col sm:flex-row gap-5 items-center">
+              <div className="flex-1 text-white/90 text-center sm:text-left">
+                <h3 className="font-serif text-2xl md:text-3xl font-semibold mb-1">Interested in this project?</h3>
+                <p className="text-sm text-white/70">Get the latest pricing, floor plans, and brochure.</p>
+              </div>
+              <Button onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto min-h-[56px] rounded-xl bg-[#D4AF37] px-8 text-[#0B0B0B] hover:bg-white transition-colors gap-2 font-bold text-base shadow-[0_0_25px_rgba(212,175,55,0.4)]">
+                <CalendarCheck className="size-5" />
+                Get Pricing
               </Button>
+            </div>
+
+          </div>
+        </section>
+        {/* ── TRUST BAR ─────────────────────────────────────── */}
+        <section className="bg-neutral-900 border-y border-solid border-[#D4AF37]/10 py-6 md:py-8 z-40 relative">
+          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-12 items-center divide-y sm:divide-y-0 sm:divide-x divide-white/10">
+              <FadeIn type="fade-up" delay={100} duration={600} className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0 first:pt-0">
+                <ShieldCheck className="size-8 text-[#D4AF37] mb-3" />
+                <h4 className="font-serif font-semibold text-neutral-50 text-lg">RERA Registered</h4>
+                <p className="text-[#a1a1a1] text-xs mt-1">P517000XXXXX</p>
+              </FadeIn>
+              <FadeIn type="fade-up" delay={200} duration={600} className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0">
+                <Award className="size-8 text-[#D4AF37] mb-3" />
+                <h4 className="font-serif font-semibold text-neutral-50 text-lg">Award Winning</h4>
+                <p className="text-[#a1a1a1] text-xs mt-1">Best Residential Project 2024</p>
+              </FadeIn>
+              <FadeIn type="fade-up" delay={300} duration={600} className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0">
+                <Milestone className="size-8 text-[#D4AF37] mb-3" />
+                <h4 className="font-serif font-semibold text-neutral-50 text-lg">18+ Years Legacy</h4>
+                <p className="text-[#a1a1a1] text-xs mt-1">Delivering Excellence</p>
+              </FadeIn>
             </div>
           </div>
         </section>
-        <section id="about" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
+        <section id="about" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16">
             <FadeIn className="relative">
               <div className="rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
@@ -698,35 +749,22 @@ export default function App() {
                   decoding="async"
                 />
               </div>
-              <div className="shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-2xl bg-neutral-900 md:bg-neutral-900/80 md:backdrop-blur-xl border border-solid border-[#D4AF37]/30 absolute right-0 bottom-0 md:-right-6 md:-bottom-6 p-4 md:p-6 animate-in fade-in zoom-in-50 duration-700 delay-500 fill-mode-both">
-                <div className="flex items-center gap-3">
-                  <Award className="size-8 text-[#D4AF37]" />
-                  <div>
-                    <p className="font-serif font-semibold text-neutral-50 text-xl leading-7">
-                      Award Winning
-                    </p>
-                    <p className="text-[#a1a1a1] text-xs leading-4">
-                      Best Residential Project 2024
-                    </p>
-                  </div>
-                </div>
-              </div>
             </FadeIn>
             <div className="flex flex-col">
               <FadeIn type="letter-expand" delay={100} duration={600}>
                 <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
                   <span className="bg-[#D4AF37] w-8 h-px" />
-                  About Vardhaman Park
+                  About Park 2.0 Phase 2
                 </div>
               </FadeIn>
-              <FadeIn type="clip-reveal" delay={200} duration={800}>
+              <FadeIn type="fade-up" delay={200} duration={800}>
                 <h2 className="leading-tight font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
                   A Legacy of Elegance, Built for Generations
                 </h2>
               </FadeIn>
               <FadeIn type="fade-up" delay={350} duration={800}>
                 <p className="leading-relaxed text-[#a1a1a1] mt-5">
-                  For over 18 years, Vardhaman Park has redefined the art of
+                  For over 18 years, Park 2.0 Phase 2 has redefined the art of
                   luxury living. Each residence is a testament to architectural
                   mastery — where timeless design meets modern innovation, and
                   every detail is crafted to perfection.
@@ -769,9 +807,88 @@ export default function App() {
             </div>
           </div>
         </section>
-        <section id="project" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
+<section id="highlights" className="relative py-12 overflow-hidden">
           <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
-            <div className="flex flex-col items-center mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16">
+              <div className="flex flex-col">
+                <FadeIn type="letter-expand" delay={100} duration={600}>
+                  <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
+                    <span className="bg-[#D4AF37] w-8 h-px" />
+                    Why Choose Us
+                  </div>
+                </FadeIn>
+                <FadeIn type="fade-up" delay={200} duration={800}>
+                  <h2 className="leading-tight font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
+                    The Distinction of Excellence
+                  </h2>
+                </FadeIn>
+                <div className="flex mt-8 flex-col gap-5">
+                  <FadeIn type="fade-up" delay={300} duration={600}>
+                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
+                        <Gem className="size-5 text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
+                          Uncompromising Quality
+                        </h3>
+                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
+                          Premium imported finishes and craftsmanship in every
+                          corner.
+                        </p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                  <FadeIn type="fade-up" delay={400} duration={600}>
+                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
+                        <Clock className="size-5 text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
+                          On-Time Delivery
+                        </h3>
+                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
+                          A proven record of delivering every project ahead of
+                          schedule.
+                        </p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                  <FadeIn type="fade-up" delay={500} duration={600}>
+                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
+                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
+                        <HandCoins className="size-5 text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
+                          Exceptional Value
+                        </h3>
+                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
+                          Investments that appreciate, designed for lasting
+                          returns.
+                        </p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                </div>
+              </div>
+              <FadeIn delay={200} className="relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+                <img
+                  alt="Park 2.0 Phase 2 Building"
+                  className="object-cover w-full h-72 sm:h-115"
+                  src={vardhamanBuilding}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </FadeIn>
+            </div>
+          </div>
+        </section>
+{/* ── PROJECT HIGHLIGHTS ───────────────────────────────── */}
+        <section id="project" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-12">
+          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
+            <div className="flex flex-col items-center mb-8">
               <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
                 <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
                   <span className="bg-[#D4AF37] w-8 h-px" />
@@ -779,7 +896,7 @@ export default function App() {
                   <span className="bg-[#D4AF37] w-8 h-px" />
                 </div>
               </FadeIn>
-              <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+              <FadeIn type="fade-up" delay={200} duration={800} className="text-center mt-3">
                 <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
                   Crafted for the Discerning Few
                 </h2>
@@ -892,89 +1009,12 @@ export default function App() {
                 </Card>
               </FadeIn>
             </div>
-          </div>
+
+                      </div>
         </section>
-        <section className="relative py-20 overflow-hidden">
+                <section className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-12">
           <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 md:gap-16">
-              <div className="flex flex-col">
-                <FadeIn type="letter-expand" delay={100} duration={600}>
-                  <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] mb-4 items-center gap-2">
-                    <span className="bg-[#D4AF37] w-8 h-px" />
-                    Why Choose Us
-                  </div>
-                </FadeIn>
-                <FadeIn type="clip-reveal" delay={200} duration={800}>
-                  <h2 className="leading-tight font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
-                    The Distinction of Excellence
-                  </h2>
-                </FadeIn>
-                <div className="flex mt-8 flex-col gap-5">
-                  <FadeIn type="fade-up" delay={300} duration={600}>
-                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
-                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
-                        <Gem className="size-5 text-[#D4AF37]" />
-                      </div>
-                      <div>
-                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
-                          Uncompromising Quality
-                        </h3>
-                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
-                          Premium imported finishes and craftsmanship in every
-                          corner.
-                        </p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                  <FadeIn type="fade-up" delay={400} duration={600}>
-                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
-                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
-                        <Clock className="size-5 text-[#D4AF37]" />
-                      </div>
-                      <div>
-                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
-                          On-Time Delivery
-                        </h3>
-                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
-                          A proven record of delivering every project ahead of
-                          schedule.
-                        </p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                  <FadeIn type="fade-up" delay={500} duration={600}>
-                    <div className="group border border-solid border-transparent hover:border-[#D4AF37]/10 hover:bg-neutral-900/20 transition-all duration-300 rounded-2xl flex p-3 gap-4">
-                      <div className="size-11 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/40 flex justify-center items-center">
-                        <HandCoins className="size-5 text-[#D4AF37]" />
-                      </div>
-                      <div>
-                        <h3 className="font-serif font-semibold text-neutral-50 text-lg leading-7">
-                          Exceptional Value
-                        </h3>
-                        <p className="text-[#a1a1a1] text-sm leading-5 mt-1">
-                          Investments that appreciate, designed for lasting
-                          returns.
-                        </p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                </div>
-              </div>
-              <FadeIn delay={200} className="relative rounded-3xl border border-solid border-[#D4AF37]/20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-                <img
-                  alt="Vardhaman Park Building"
-                  className="object-cover w-full h-72 sm:h-115"
-                  src={vardhamanBuilding}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </FadeIn>
-            </div>
-          </div>
-        </section>
-        <section className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
-          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
-            <div className="flex flex-col items-center mb-12">
+            <div className="flex flex-col items-center mb-8">
               <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
                 <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
                   <span className="bg-[#D4AF37] w-8 h-px" />
@@ -982,7 +1022,7 @@ export default function App() {
                   <span className="bg-[#D4AF37] w-8 h-px" />
                 </div>
               </FadeIn>
-              <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+              <FadeIn type="fade-up" delay={200} duration={800} className="text-center mt-3">
                 <h2 className="font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
                   A Vision Beautifully Planned
                 </h2>
@@ -1060,8 +1100,9 @@ export default function App() {
               </div>
             </div>
           </div>
-        </section>        <section id="amenities" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
-          <div className="flex flex-col items-center mb-12">
+        </section>
+        <section id="lifestyle" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-12">
+          <div className="flex flex-col items-center mb-8">
             <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
               <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
                 <span className="bg-[#D4AF37] w-8 h-px" />
@@ -1069,7 +1110,7 @@ export default function App() {
                 <span className="bg-[#D4AF37] w-8 h-px" />
               </div>
             </FadeIn>
-            <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+            <FadeIn type="fade-up" delay={200} duration={800} className="text-center mt-3">
               <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
                 Indulge in Everyday Luxury
               </h2>
@@ -1206,9 +1247,385 @@ export default function App() {
             </FadeIn>
           </div>
         </section>
-        <section id="gallery" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-20">
+        {/* ── OUR SERVICES ─────────────────────────────────────── */}
+        <section className="max-w-[1180px] mx-auto px-6 sm:px-8 py-12">
+          <div className="flex flex-col items-center mb-8">
+            <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
+              <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                <span className="bg-[#D4AF37] w-8 h-px" />
+                Our Services
+                <span className="bg-[#D4AF37] w-8 h-px" />
+              </div>
+            </FadeIn>
+            <FadeIn type="fade-up" delay={200} duration={800} className="text-center mt-3">
+              <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
+                Lifestyle Curated for You
+              </h2>
+            </FadeIn>
+            <FadeIn type="fade-up" delay={300} duration={600} className="text-center mt-4 max-w-xl">
+              <p className="text-[#a1a1a1] leading-relaxed">
+                An extraordinary collection of services designed to elevate every moment of your daily life at Park 2.0 Phase 2.
+              </p>
+            </FadeIn>
+          </div>
+
+          {/* Services Grid (2x2 Layout) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+
+            {(([
+              {
+                key: "zen",
+                icon: <Wind className="size-6 text-[#D4AF37]" />,
+                title: "Zen Garden",
+                desc: "A serene sanctuary for quiet contemplation and mindful relaxation.",
+                subs: [
+                  { icon: <Leaf className="size-5 text-[#D4AF37]" />, label: "Herbs & Spice Garden", desc: "Fresh aromatic herbs and spices grown in your community garden." },
+                  { icon: <Trees className="size-5 text-[#D4AF37]" />, label: "Fruit Garden", desc: "Lush orchards brimming with seasonal fruits at your doorstep." },
+                  { icon: <Flower2 className="size-5 text-[#D4AF37]" />, label: "Flower Garden", desc: "Vibrant blooms creating a breathtaking open landscape." },
+                ],
+              },
+              {
+                key: "pool",
+                icon: <Waves className="size-6 text-[#D4AF37]" />,
+                title: "Swimming Pool",
+                desc: "A resort-style pool offering refreshing swims for all residents.",
+                subs: [
+                  { icon: <Baby className="size-5 text-[#D4AF37]" />, label: "Kids' Pool Area", desc: "A safe, fun-filled splash zone designed for the little ones." },
+                  { icon: <Sparkles className="size-5 text-[#D4AF37]" />, label: "Badminton / Multi-Purpose Hall", desc: "A versatile sports hall for badminton, events, and gatherings." },
+                ],
+              },
+              {
+                key: "gym",
+                icon: <Dumbbell className="size-6 text-[#D4AF37]" />,
+                title: "Gym & Pilates",
+                desc: "A fully-equipped gym with a dedicated pilates studio.",
+                subs: [
+                  { icon: <GraduationCap className="size-5 text-[#D4AF37]" />, label: "Yoga / Meditation Room", desc: "A tranquil space for yoga practice and spiritual wellness." },
+                  { icon: <BookOpen className="size-5 text-[#D4AF37]" />, label: "Library", desc: "A curated collection in a quiet, elegant reading space." },
+                  { icon: <Sunset className="size-5 text-[#D4AF37]" />, label: "Salon", desc: "Premium in-house grooming and beauty services." },
+                ],
+              },
+              {
+                key: "senior",
+                icon: <Users className="size-6 text-[#D4AF37]" />,
+                title: "Senior Citizen Fitness Area",
+                desc: "Outdoor fitness stations designed for the health needs of seniors.",
+                subs: [
+                  { icon: <Swords className="size-5 text-[#D4AF37]" />, label: "Cards / Carrom Room", desc: "An indoor games room for social bonding and recreation." },
+                  { icon: <Milestone className="size-5 text-[#D4AF37]" />, label: "Foot Reflexology Path", desc: "Therapeutic cobblestone paths for holistic wellness." },
+                  { icon: <Footprints className="size-5 text-[#D4AF37]" />, label: "Nature Trail", desc: "Meandering pathways through lush greenery for daily strolls." },
+                ],
+              },
+            ] as const)).map((card, i) => {
+              const isOpen = expandedService === card.key;
+              return (
+                <div key={card.key} className={isOpen ? "col-span-full" : ""}>
+                  {/* ── Main Card ── */}
+                  <FadeIn type="scale-up" delay={80 * i} duration={600}>
+                    <div
+                      onClick={() => toggleService(card.key)}
+                      className={`group cursor-pointer rounded-2xl bg-neutral-900/60 backdrop-blur-sm border border-solid p-6 md:p-8 flex gap-5 items-start shadow-md transition-all duration-500 ${
+                        isOpen
+                          ? "border-[#D4AF37]/55 shadow-[0_8px_30px_rgba(212,175,55,0.15)] bg-neutral-900"
+                          : "border-[#D4AF37]/15 hover:border-[#D4AF37]/50 hover:bg-neutral-900 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(212,175,55,0.1)]"
+                      }`}
+                    >
+                      <div className={`size-14 shrink-0 rounded-xl border border-solid flex justify-center items-center transition-all duration-500 ${isOpen ? "bg-[#D4AF37]/20 border-[#D4AF37]/40 scale-105" : "bg-[#D4AF37]/5 border-[#D4AF37]/20 group-hover:bg-[#D4AF37]/15 group-hover:border-[#D4AF37]/40 group-hover:scale-110"}`}>
+                        {card.icon}
+                      </div>
+                      <div className="flex flex-col gap-2 flex-1 min-w-0 pt-1">
+                        <h3 className="font-serif font-semibold text-neutral-50 text-xl md:text-2xl leading-tight group-hover:text-[#D4AF37] transition-colors duration-300">{card.title}</h3>
+                        <p className="text-[#a1a1a1] text-sm md:text-base leading-relaxed">{card.desc}</p>
+                      </div>
+                      <div className={`size-8 shrink-0 mt-1 rounded-full border border-[#D4AF37]/25 bg-[#D4AF37]/5 flex justify-center items-center transition-all duration-500 group-hover:bg-[#D4AF37]/20 ${isOpen ? "rotate-180" : "rotate-0"}`}>
+                        <ChevronDown className="size-4 text-[#D4AF37]" />
+                      </div>
+                    </div>
+                  </FadeIn>
+
+                  {/* ── Sub-cards row (revealed on click) ── */}
+                  {isOpen && (
+                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-3 duration-400">
+                      {card.subs.map((sub, si) => (
+                        <div
+                          key={sub.label}
+                          className="rounded-2xl bg-neutral-800/60 border border-solid border-[#D4AF37]/20 p-5 flex gap-4 items-start shadow-sm hover:border-[#D4AF37]/40 hover:bg-neutral-800 transition-all duration-300"
+                          style={{ animationDelay: `${si * 60}ms` }}
+                        >
+                          <div className="size-10 shrink-0 rounded-xl bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/25 flex justify-center items-center">
+                            {sub.icon}
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <h4 className="font-serif font-semibold text-neutral-100 text-base leading-5">{sub.label}</h4>
+                            <p className="text-[#a1a1a1] text-sm leading-5">{sub.desc}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+                {/* Floor Plans Section — SEO semantic section with proper heading hierarchy, structured data for AEO/GEO */}
+            <section id="floor-plans" aria-labelledby="floor-plans-heading" className="max-w-[1180px] mx-auto px-6 sm:px-8 pt-4 pb-12">
+              {/* JSON-LD Structured Data for Floor Plans — improves AEO & GEO discoverability */}
+              <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "Park 2.0 Phase 2 Floor Plans – 1 BHK & 2 BHK Apartments Shahad Mumbai",
+                "description": "Explore architect-designed, Vastu-compliant floor plans for luxury 1 BHK and 2 BHK apartments at Park 2.0 Phase 2, Shahad, Mumbai. View typical floor plans, building elevation, and aerial site views.",
+                "numberOfItems": 2,
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "1 BHK Apartment Floor Plan – 425 to 475 sq ft",
+                    "description": "Vastu-compliant 1 BHK apartment layout at Park 2.0 Phase 2 featuring bedroom, kitchen, living room, dining area and patio with carpet area ranging from 425 to 475 sq ft."
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "2 BHK Apartment Floor Plan – 650 to 720 sq ft",
+                    "description": "Spacious Vastu-compliant 2 BHK apartment layout at Park 2.0 Phase 2 featuring master bedroom, second bedroom, kitchen, living room, dining area and patio with carpet area ranging from 650 to 720 sq ft."
+                  }
+                ]
+              }) }} />
+
+              <FadeIn type="letter-expand" delay={100} duration={600} className="text-center mb-3">
+                <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                  Floor Plans
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                </div>
+              </FadeIn>
+              <FadeIn type="fade-up" delay={150} duration={700} className="text-center mb-2">
+                <h2 id="floor-plans-heading" className="font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-tight">
+                  1 BHK &amp; 2 BHK Floor Plans
+                </h2>
+              </FadeIn>
+              <FadeIn type="fade-up" delay={200} duration={600} className="text-center mb-10">
+                <p className="text-[#a1a1a1] text-sm max-w-2xl mx-auto leading-relaxed">
+                  Explore Vastu-compliant, architect-designed floor plans for our 1 BHK (425–475 sq.ft.) and 2 BHK (650–720 sq.ft.) luxury apartments at Park 2.0 Phase 2, Shahad, Mumbai. View detailed layouts, building elevation, and aerial site views.
+                </p>
+              </FadeIn>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 w-full">
+                {/* ── 1 BHK Floor Plan Card ── */}
+                <FadeIn delay={200} duration={600}>
+                  <article id="1bhk-floor-plan" aria-labelledby="1bhk-heading" className="h-full">
+                    <Card className="group h-full transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-4 flex flex-col gap-4 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)] overflow-hidden">
+                      {/* Main preview image – click opens full gallery */}
+                      <figure
+                        className="relative aspect-[4/3] rounded-lg overflow-hidden bg-black flex items-center justify-center cursor-pointer"
+                        onClick={() => setFloorPlanGallery({ images: bhk1Images, index: 0 })}
+                        role="button"
+                        aria-label="View 1 BHK floor plan gallery with 4 high-resolution images"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFloorPlanGallery({ images: bhk1Images, index: 0 }); }}}
+                      >
+                        <img
+                          src="/1bhk-plan.jpg"
+                          alt="1 BHK Apartment Floor Plan Layout at Park 2.0 Phase 2 Shahad Kalyan – 425 to 475 sq ft Vastu Compliant Design"
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                          loading="lazy"
+                          decoding="async"
+                          width="800"
+                          height="600"
+                        />
+                        {/* Hover overlay with image count badge */}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2 rounded-lg">
+                          <ZoomIn className="text-[#D4AF37] size-10 drop-shadow-lg" />
+                          <span className="text-white text-xs font-semibold bg-[#D4AF37]/20 border border-[#D4AF37]/40 px-3 py-1 rounded-full backdrop-blur-sm">
+                            {bhk1Images.length} Photos
+                          </span>
+                        </div>
+                        <figcaption className="sr-only">1 BHK apartment floor plan showing room layout and dimensions at Park 2.0 Phase 2</figcaption>
+                      </figure>
+
+                      {/* Inline thumbnail gallery grid – 3 additional images */}
+                      <div className="grid grid-cols-3 gap-2" role="list" aria-label="1 BHK gallery thumbnails">
+                        {bhk1Images.slice(1).map((img, i) => (
+                          <button
+                            key={img.src + '-thumb-' + i}
+                            onClick={() => setFloorPlanGallery({ images: bhk1Images, index: i + 1 })}
+                            className="relative aspect-[4/3] rounded-md overflow-hidden border border-neutral-700 hover:border-[#D4AF37]/60 transition-all duration-300 cursor-pointer group/thumb bg-black"
+                            aria-label={`View ${img.label} – Image ${i + 2} of ${bhk1Images.length}`}
+                            role="listitem"
+                          >
+                            <img
+                              src={img.src}
+                              alt={img.alt}
+                              className="w-full h-full object-cover group-hover/thumb:scale-110 transition-transform duration-500"
+                              loading="lazy"
+                              decoding="async"
+                              width="400"
+                              height="300"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover/thumb:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-1.5">
+                              <span className="text-white text-[10px] font-medium tracking-wide">{img.label}</span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+
+                      <CardHeader className="p-0 text-center">
+                        <CardTitle className="font-serif text-neutral-50 text-2xl">
+                          <h3 id="1bhk-heading" className="font-serif font-semibold text-neutral-50 text-2xl m-0">1 BHK Configuration</h3>
+                        </CardTitle>
+                        <p className="text-[#a1a1a1] text-sm mt-1">Carpet Area: 425 – 475 sq.ft. | Vastu Compliant</p>
+                        <p className="text-[#a1a1a1]/60 text-xs mt-2 leading-relaxed">
+                          Thoughtfully designed 1 BHK apartments featuring a spacious bedroom, modern kitchen, well-lit living room, dining area, and private patio — ideal for couples and young professionals in Shahad, Kalyan.
+                        </p>
+                      </CardHeader>
+                      <CardContent className="p-0 flex justify-center mt-2">
+                        <button
+                          id="btn-view-1bhk-gallery"
+                          onClick={() => setFloorPlanGallery({ images: bhk1Images, index: 0 })}
+                          className="bg-[#D4AF37] hover:bg-[#b5952f] text-neutral-950 font-semibold py-2.5 px-6 rounded-full transition-colors flex items-center gap-2 shadow-lg cursor-pointer"
+                        >
+                          <Eye className="size-4" />
+                          View All Plans
+                        </button>
+                      </CardContent>
+                    </Card>
+                  </article>
+                </FadeIn>
+
+                {/* ── 2 BHK Floor Plan Card ── */}
+                <FadeIn delay={300} duration={600}>
+                  <article id="2bhk-floor-plan" aria-labelledby="2bhk-heading" className="h-full">
+                    <Card className="group h-full transition-all duration-300 bg-neutral-900 border border-solid border-[#D4AF37]/15 p-4 flex flex-col gap-4 shadow-md hover:border-[#D4AF37]/45 hover:shadow-[0_10px_30px_rgba(212,175,55,0.05)] overflow-hidden">
+                      {/* Main preview image – click opens full gallery */}
+                      <figure
+                        className="relative aspect-[4/3] rounded-lg overflow-hidden bg-black flex items-center justify-center cursor-pointer"
+                        onClick={() => setFloorPlanGallery({ images: bhk2Images, index: 0 })}
+                        role="button"
+                        aria-label="View 2 BHK floor plan gallery with 4 high-resolution images"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFloorPlanGallery({ images: bhk2Images, index: 0 }); }}}
+                      >
+                        <img
+                          src="/2bhk-plan.jpg"
+                          alt="2 BHK Apartment Floor Plan Layout at Park 2.0 Phase 2 Shahad Kalyan – 650 to 720 sq ft Vastu Compliant Design"
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                          loading="lazy"
+                          decoding="async"
+                          width="800"
+                          height="600"
+                        />
+                        {/* Hover overlay with image count badge */}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2 rounded-lg">
+                          <ZoomIn className="text-[#D4AF37] size-10 drop-shadow-lg" />
+                          <span className="text-white text-xs font-semibold bg-[#D4AF37]/20 border border-[#D4AF37]/40 px-3 py-1 rounded-full backdrop-blur-sm">
+                            {bhk2Images.length} Photos
+                          </span>
+                        </div>
+                        <figcaption className="sr-only">2 BHK apartment floor plan showing room layout and dimensions at Park 2.0 Phase 2</figcaption>
+                      </figure>
+
+                      {/* Inline thumbnail gallery grid – 3 additional images */}
+                      <div className="grid grid-cols-3 gap-2" role="list" aria-label="2 BHK gallery thumbnails">
+                        {bhk2Images.slice(1).map((img, i) => (
+                          <button
+                            key={img.src + '-thumb-' + i}
+                            onClick={() => setFloorPlanGallery({ images: bhk2Images, index: i + 1 })}
+                            className="relative aspect-[4/3] rounded-md overflow-hidden border border-neutral-700 hover:border-[#D4AF37]/60 transition-all duration-300 cursor-pointer group/thumb bg-black"
+                            aria-label={`View ${img.label} – Image ${i + 2} of ${bhk2Images.length}`}
+                            role="listitem"
+                          >
+                            <img
+                              src={img.src}
+                              alt={img.alt}
+                              className="w-full h-full object-cover group-hover/thumb:scale-110 transition-transform duration-500"
+                              loading="lazy"
+                              decoding="async"
+                              width="400"
+                              height="300"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover/thumb:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-1.5">
+                              <span className="text-white text-[10px] font-medium tracking-wide">{img.label}</span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+
+                      <CardHeader className="p-0 text-center">
+                        <CardTitle className="font-serif text-neutral-50 text-2xl">
+                          <h3 id="2bhk-heading" className="font-serif font-semibold text-neutral-50 text-2xl m-0">2 BHK Configuration</h3>
+                        </CardTitle>
+                        <p className="text-[#a1a1a1] text-sm mt-1">Carpet Area: 650 – 720 sq.ft. | Vastu Compliant</p>
+                        <p className="text-[#a1a1a1]/60 text-xs mt-2 leading-relaxed">
+                          Spacious 2 BHK apartments with master bedroom, second bedroom, modern kitchen, generous living and dining area, and private patio — perfect for growing families seeking premium living in Shahad, Kalyan.
+                        </p>
+                      </CardHeader>
+                      <CardContent className="p-0 flex justify-center mt-2">
+                        <button
+                          id="btn-view-2bhk-gallery"
+                          onClick={() => setFloorPlanGallery({ images: bhk2Images, index: 0 })}
+                          className="bg-[#D4AF37] hover:bg-[#b5952f] text-neutral-950 font-semibold py-2.5 px-6 rounded-full transition-colors flex items-center gap-2 shadow-lg cursor-pointer"
+                        >
+                          <Eye className="size-4" />
+                          View All Plans
+                        </button>
+                      </CardContent>
+                    </Card>
+                  </article>
+                </FadeIn>
+              </div>
+
+              {/* AEO/GEO — Premium Interactive FAQ block for answer engines */}
+              <FadeIn type="fade-up" delay={400} duration={600} className="mt-16 w-full">
+                <div className="relative p-[1px] rounded-2xl bg-gradient-to-b from-[#D4AF37]/30 to-transparent">
+                  <div className="bg-neutral-950/80 backdrop-blur-md rounded-2xl p-8 sm:p-10">
+                    <div className="flex items-center justify-center gap-4 mb-10">
+                      <span className="w-16 h-[1px] bg-gradient-to-r from-transparent to-[#D4AF37]/60"></span>
+                      <h3 className="font-serif text-neutral-50 text-2xl md:text-3xl font-semibold text-center tracking-wide">
+                        Floor Plan Insights
+                      </h3>
+                      <span className="w-16 h-[1px] bg-gradient-to-l from-transparent to-[#D4AF37]/60"></span>
+                    </div>
+                    
+                    <dl className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                      <div className="group bg-neutral-900/40 hover:bg-neutral-900/80 border border-[#D4AF37]/10 hover:border-[#D4AF37]/40 transition-all duration-500 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1">
+                        <dt className="text-neutral-50 font-serif font-medium text-lg mb-3 flex items-start gap-3 group-hover:text-[#D4AF37] transition-colors">
+                          <span className="text-[#D4AF37] opacity-60 mt-0.5">01.</span>
+                          1 BHK Carpet Area
+                        </dt>
+                        <dd className="text-[#a1a1a1] leading-relaxed pl-8">
+                          The 1 BHK apartments at Park 2.0 Phase 2, Shahad range from <strong className="text-neutral-200 font-medium">425 to 475 sq.ft.</strong> carpet area. Each unit includes a bedroom, kitchen, living room, dining area, and a private patio with a Vastu-compliant layout.
+                        </dd>
+                      </div>
+
+                      <div className="group bg-neutral-900/40 hover:bg-neutral-900/80 border border-[#D4AF37]/10 hover:border-[#D4AF37]/40 transition-all duration-500 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1">
+                        <dt className="text-neutral-50 font-serif font-medium text-lg mb-3 flex items-start gap-3 group-hover:text-[#D4AF37] transition-colors">
+                          <span className="text-[#D4AF37] opacity-60 mt-0.5">02.</span>
+                          2 BHK Carpet Area
+                        </dt>
+                        <dd className="text-[#a1a1a1] leading-relaxed pl-8">
+                          The 2 BHK apartments at Park 2.0 Phase 2, Shahad range from <strong className="text-neutral-200 font-medium">650 to 720 sq.ft.</strong> carpet area. Each unit includes a master bedroom, second bedroom, kitchen, spacious living and dining area, and a private patio.
+                        </dd>
+                      </div>
+
+                      <div className="group bg-neutral-900/40 hover:bg-neutral-900/80 border border-[#D4AF37]/10 hover:border-[#D4AF37]/40 transition-all duration-500 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 md:col-span-2">
+                        <dt className="text-neutral-50 font-serif font-medium text-lg mb-3 flex items-start gap-3 group-hover:text-[#D4AF37] transition-colors">
+                          <span className="text-[#D4AF37] opacity-60 mt-0.5">03.</span>
+                          Vastu Compliance
+                        </dt>
+                        <dd className="text-[#a1a1a1] leading-relaxed pl-8">
+                          Yes, all 1 BHK and 2 BHK apartments at Park 2.0 Phase 2 are meticulously designed with Vastu-compliant orientations, ensuring positive energy flow, abundant natural light, and optimal cross-ventilation for a harmonious lifestyle.
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </FadeIn>
+            </section>
+        <section id="gallery" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 py-12">
           <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
-            <div className="flex flex-col items-center mb-12">
+            <div className="flex flex-col items-center mb-8">
               <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
                 <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
                   <span className="bg-[#D4AF37] w-8 h-px" />
@@ -1216,7 +1633,7 @@ export default function App() {
                   <span className="bg-[#D4AF37] w-8 h-px" />
                 </div>
               </FadeIn>
-              <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+              <FadeIn type="fade-up" delay={200} duration={800} className="text-center mt-3">
                 <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10 mb-8">
                   Glimpses of Grandeur
                 </h2>
@@ -1298,6 +1715,103 @@ export default function App() {
             </div>
           </div>
 
+          {/* ── Floor Plan Gallery Lightbox ───────────────────────── */}
+          {floorPlanGallery !== null && (() => {
+            const { images, index } = floorPlanGallery;
+            const current = images[index];
+            const total = images.length;
+            const goPrev = (e: React.MouseEvent) => { e.stopPropagation(); setFloorPlanGallery(prev => prev ? { ...prev, index: (prev.index - 1 + total) % total } : null); };
+            const goNext = (e: React.MouseEvent) => { e.stopPropagation(); setFloorPlanGallery(prev => prev ? { ...prev, index: (prev.index + 1) % total } : null); };
+            return (
+              <div
+                className="fixed inset-0 z-[60] flex items-center justify-center bg-black/97 backdrop-blur-xl"
+                onClick={() => setFloorPlanGallery(null)}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Floor Plan Gallery"
+              >
+                {/* Close */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); setFloorPlanGallery(null); }}
+                  className="absolute top-5 right-5 z-[70] p-2 rounded-full bg-neutral-900/80 border border-neutral-700 text-neutral-400 hover:text-white hover:border-[#D4AF37]/50 transition-all cursor-pointer"
+                  aria-label="Close gallery"
+                >
+                  <X className="size-6" />
+                </button>
+
+                {/* Image counter */}
+                <div className="absolute top-5 left-1/2 -translate-x-1/2 z-[70] px-4 py-1.5 rounded-full bg-neutral-900/80 border border-neutral-700 text-neutral-300 text-sm font-medium">
+                  {index + 1} / {total}
+                </div>
+
+                {/* Prev button */}
+                <button
+                  onClick={goPrev}
+                  className="absolute left-3 sm:left-6 z-[70] p-3 rounded-full bg-neutral-900/80 border border-neutral-700 text-neutral-400 hover:text-white hover:border-[#D4AF37]/50 transition-all cursor-pointer"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="size-7" />
+                </button>
+
+                {/* Next button */}
+                <button
+                  onClick={goNext}
+                  className="absolute right-3 sm:right-6 z-[70] p-3 rounded-full bg-neutral-900/80 border border-neutral-700 text-neutral-400 hover:text-white hover:border-[#D4AF37]/50 transition-all cursor-pointer"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="size-7" />
+                </button>
+
+                {/* Main image */}
+                <div
+                  className="flex flex-col items-center gap-4 max-w-[90vw] select-none px-14"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <figure className="flex flex-col items-center gap-3">
+                    <img
+                      key={current.src}
+                      src={current.src}
+                      alt={current.alt}
+                      className="max-h-[65vh] max-w-full object-contain rounded-xl border border-[#D4AF37]/20 shadow-[0_0_60px_rgba(212,175,55,0.1)] animate-in fade-in duration-300"
+                      decoding="async"
+                      loading="eager"
+                    />
+                    <figcaption className="text-center">
+                      <p className="text-[#D4AF37] text-xs uppercase tracking-[3px] font-medium">{current.label}</p>
+                    </figcaption>
+                  </figure>
+
+                  {/* Thumbnail strip */}
+                  <div className="flex gap-2 flex-wrap justify-center mt-1">
+                    {images.map((img, i) => (
+                      <button
+                        key={img.src + i}
+                        onClick={(e) => { e.stopPropagation(); setFloorPlanGallery(prev => prev ? { ...prev, index: i } : null); }}
+                        className={`relative w-14 h-10 sm:w-18 sm:h-12 rounded-md overflow-hidden border-2 transition-all cursor-pointer flex-shrink-0 ${
+                          i === index
+                            ? 'border-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.4)] scale-105'
+                            : 'border-neutral-700 hover:border-[#D4AF37]/50 opacity-60 hover:opacity-100'
+                        }`}
+                        aria-label={`View image ${i + 1}: ${img.label}`}
+                      >
+                        <img
+                          src={img.src}
+                          alt={img.alt}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Keyboard hint */}
+                  <p className="text-neutral-600 text-xs hidden sm:block">Use ← → arrow keys to navigate · Esc to close</p>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Lightbox Modal */}
           {lightboxIndex !== null && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-4">
@@ -1361,8 +1875,47 @@ export default function App() {
             </div>
           )}
         </section>
-        <section id="location" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
-          <div className="flex flex-col items-center mb-12">
+        {/* ── TESTIMONIALS ───────────────────────────────────────── */}
+        <section id="testimonials" className="border-y border-solid border-[#D4AF37]/10 bg-neutral-900/30 pt-12 pb-4">
+          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
+            <div className="flex flex-col items-center mb-8">
+              <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
+                <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                  Testimonials
+                  <span className="bg-[#D4AF37] w-8 h-px" />
+                </div>
+              </FadeIn>
+              <FadeIn type="fade-up" delay={200} duration={800} className="text-center mt-3">
+                <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
+                  Hear From Our Residents
+                </h2>
+              </FadeIn>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { name: "Rahul Deshmukh", text: "The quality of construction and attention to detail is truly exceptional. We found our dream home.", role: "Homeowner" },
+                { name: "Priya Sharma", text: "From booking to possession, the process was seamless. The amenities are world-class and perfect for my family.", role: "Resident" },
+                { name: "Anand Patil", text: "Investing in Park 2.0 Phase 2 was the best decision. The connectivity and luxury lifestyle offered here are unmatched.", role: "Investor" }
+              ].map((t, i) => (
+                <FadeIn key={i} delay={300 + i * 150} type="fade-up" className="h-full">
+                  <Card className="bg-neutral-800/40 border border-solid border-[#D4AF37]/10 p-6 h-full flex flex-col justify-between hover:border-[#D4AF37]/30 transition-colors">
+                    <p className="text-[#a1a1a1] italic text-sm leading-relaxed">"{t.text}"</p>
+                    <div className="mt-6 flex items-center gap-3">
+                      <div className="size-10 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] font-serif font-bold">{t.name[0]}</div>
+                      <div>
+                        <p className="text-neutral-50 font-semibold text-sm">{t.name}</p>
+                        <p className="text-[#D4AF37] text-xs">{t.role}</p>
+                      </div>
+                    </div>
+                  </Card>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section id="location" className="max-w-[1180px] mx-auto px-6 sm:px-8 pt-4 pb-12" itemScope itemType="https://schema.org/Place">
+          <div className="flex flex-col items-center mb-8">
             <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
               <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
                 <span className="bg-[#D4AF37] w-8 h-px" />
@@ -1370,96 +1923,201 @@ export default function App() {
                 <span className="bg-[#D4AF37] w-8 h-px" />
               </div>
             </FadeIn>
-            <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+            <FadeIn type="fade-up" delay={200} duration={800} className="text-center mt-3">
               <h2 className="font-serif font-semibold text-neutral-50 text-3xl md:text-4xl leading-10">
                 Connected to Everything That Matters
               </h2>
             </FadeIn>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            {/* 1. Railway Station */}
             <FadeIn type="scale-up" delay={100} duration={500}>
-              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
-                <GraduationCap className="size-5 text-[#D4AF37]" />
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <TrainFront className="size-6 text-[#D4AF37]" />
+                </div>
                 <div>
-                  <p className="font-medium text-neutral-50 text-sm leading-5">
-                    Top Schools
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
+                    Shahad Railway Station
                   </p>
-                  <p className="text-[#a1a1a1] text-xs leading-4">
-                    5 min away
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    5 min walk (~200m)
                   </p>
                 </div>
               </div>
             </FadeIn>
+
+            {/* 2. Schools */}
             <FadeIn type="scale-up" delay={150} duration={500}>
-              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
-                <Hospital className="size-5 text-[#D4AF37]" />
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <GraduationCap className="size-6 text-[#D4AF37]" />
+                </div>
                 <div>
-                  <p className="font-medium text-neutral-50 text-sm leading-5">
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
+                    Schools & Colleges
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    Nearby
+                  </p>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* 3. Bus Stops */}
+            <FadeIn type="scale-up" delay={200} duration={500}>
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <BusFront className="size-6 text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
+                    Two Bus Stops
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    Nearby
+                  </p>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* 4. D-Mart */}
+            <FadeIn type="scale-up" delay={250} duration={500}>
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <ShoppingCart className="size-6 text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
+                    D-Mart
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    Nearby
+                  </p>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* 5. Patel Mart & Super Mart */}
+            <FadeIn type="scale-up" delay={300} duration={500}>
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <Store className="size-6 text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
+                    Patel Mart & Super Mart
+                  </p>
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    Nearby
+                  </p>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* 6. Hospitals */}
+            <FadeIn type="scale-up" delay={350} duration={500}>
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <Hospital className="size-6 text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
                     Hospitals
                   </p>
-                  <p className="text-[#a1a1a1] text-xs leading-4">
-                    8 min away
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    Nearby
                   </p>
                 </div>
               </div>
             </FadeIn>
-            <FadeIn type="scale-up" delay={200} duration={500}>
-              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
-                <ShoppingBag className="size-5 text-[#D4AF37]" />
+
+            {/* 7. Temple */}
+            <FadeIn type="scale-up" delay={400} duration={500}>
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <MapPin className="size-6 text-[#D4AF37]" />
+                </div>
                 <div>
-                  <p className="font-medium text-neutral-50 text-sm leading-5">
-                    Shopping Malls
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
+                    Temple
                   </p>
-                  <p className="text-[#a1a1a1] text-xs leading-4">
-                    10 min away
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    Nearby
                   </p>
                 </div>
               </div>
             </FadeIn>
-            <FadeIn type="scale-up" delay={250} duration={500}>
-              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
-                <Milestone className="size-5 text-[#D4AF37]" />
+
+            {/* 8. Local Market */}
+            <FadeIn type="scale-up" delay={450} duration={500}>
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <ShoppingBag className="size-6 text-[#D4AF37]" />
+                </div>
                 <div>
-                  <p className="font-medium text-neutral-50 text-sm leading-5">
-                    Highway
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
+                    Local Market
                   </p>
-                  <p className="text-[#a1a1a1] text-xs leading-4">
-                    3 min away
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    Nearby
                   </p>
                 </div>
               </div>
             </FadeIn>
-            <FadeIn type="scale-up" delay={300} duration={500}>
-              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
-                <TrainFront className="size-5 text-[#D4AF37]" />
+
+            {/* 9. Vegetarian Hotels */}
+            <FadeIn type="scale-up" delay={500} duration={500}>
+              <div 
+                className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-4 hover:border-[#D4AF37]/50 hover:bg-neutral-800 transition-all duration-300 h-full shadow-lg group"
+                itemProp="amenityFeature" itemScope itemType="https://schema.org/LocationFeatureSpecification"
+              >
+                <div className="bg-[#D4AF37]/10 p-3 rounded-lg group-hover:bg-[#D4AF37]/20 transition-colors">
+                  <Utensils className="size-6 text-[#D4AF37]" />
+                </div>
                 <div>
-                  <p className="font-medium text-neutral-50 text-sm leading-5">
-                    Railway Station
+                  <p className="font-semibold text-neutral-50 text-sm md:text-base leading-5" itemProp="name">
+                    Veg Hotels & Restaurants
                   </p>
-                  <p className="text-[#a1a1a1] text-xs leading-4">
-                    12 min away
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
-            <FadeIn type="scale-up" delay={350} duration={500}>
-              <div className="rounded-xl bg-neutral-900 border border-solid border-[#D4AF37]/15 flex p-4 items-center gap-3 hover:border-[#D4AF37]/35 transition-colors h-full">
-                <Plane className="size-5 text-[#D4AF37]" />
-                <div>
-                  <p className="font-medium text-neutral-50 text-sm leading-5">
-                    Airport
-                  </p>
-                  <p className="text-[#a1a1a1] text-xs leading-4">
-                    25 min away
+                  <p className="text-[#a1a1a1] text-xs md:text-sm leading-4 mt-1" itemProp="value">
+                    Nearby
                   </p>
                 </div>
               </div>
             </FadeIn>
+
           </div>
         </section>
 
-        <section id="contact" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-20">
-          <div className="flex flex-col items-center mb-12">
+        {/* ── FAQ ───────────────────────────────────────── */}
+        <FAQ />
+
+        <section id="contact" className="max-w-[1180px] mx-auto px-6 sm:px-8 py-12">
+          <div className="flex flex-col items-center mb-8">
             <FadeIn type="letter-expand" delay={100} duration={600} className="text-center">
               <div className="inline-flex uppercase text-[#D4AF37] text-xs leading-4 tracking-[4px] items-center gap-2">
                 <span className="bg-[#D4AF37] w-8 h-px" />
@@ -1467,14 +2125,14 @@ export default function App() {
                 <span className="bg-[#D4AF37] w-8 h-px" />
               </div>
             </FadeIn>
-            <FadeIn type="clip-reveal" delay={200} duration={800} className="text-center mt-3">
+            <FadeIn type="fade-up" delay={200} duration={800} className="text-center mt-3">
               <h2 className="font-serif font-semibold text-neutral-50 text-4xl leading-10">
                 We'd Love to Hear From You
               </h2>
             </FadeIn>
             <FadeIn type="fade-up" delay={300} duration={800} className="text-center mt-3">
               <p className="text-[#a1a1a1] max-w-xl mx-auto text-sm leading-6">
-                Reach out to our luxury consultants for pricing, site visits, or any queries about Vardhaman Park.
+                Reach out to our luxury consultants for pricing, site visits, or any queries about Park 2.0 Phase 2.
               </p>
             </FadeIn>
           </div>
@@ -1489,7 +2147,7 @@ export default function App() {
                   </div>
                   <div>
                     <p className="font-serif font-semibold text-neutral-50 text-base mb-1">Visit Us</p>
-                    <p className="text-[#a1a1a1] text-sm leading-5">Vardhaman Park, Sector 12,<br />New Delhi – 110 001, India</p>
+                    <p className="text-[#a1a1a1] text-sm leading-5">Park 2.0 Phase 2,<br />Dhakate Shahad, Shahad,<br />Kalyan, Maharashtra - 421103</p>
                   </div>
                 </div>
               </FadeIn>
@@ -1516,6 +2174,30 @@ export default function App() {
                     <a href="mailto:info@vardhamanpark.com" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">info@vardhamanpark.com</a>
                     <br />
                     <a href="mailto:sales@vardhamanpark.com" className="text-[#a1a1a1] text-sm hover:text-[#D4AF37] transition-colors">sales@vardhamanpark.com</a>
+                  </div>
+                </div>
+              </FadeIn>
+              <FadeIn type="fade-right" delay={450} duration={600}>
+                <div className="rounded-2xl bg-neutral-900 border border-[#D4AF37]/20 p-6 flex items-start gap-4 h-full">
+                  <div className="size-12 shrink-0 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center">
+                    <Users className="size-5 text-[#D4AF37]" />
+                  </div>
+                  <div>
+                    <p className="font-serif font-semibold text-neutral-50 text-base mb-2">Follow Us</p>
+                    <div className="flex items-center gap-4">
+                      <a href="https://www.instagram.com/vardhamanpark/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram" className="text-[#a1a1a1] hover:text-[#D4AF37] transition-colors">
+                        <Instagram className="size-5" />
+                      </a>
+                      <a href="https://www.facebook.com/profile.php?id=61589541251624" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook" className="text-[#a1a1a1] hover:text-[#D4AF37] transition-colors">
+                        <Facebook className="size-5" />
+                      </a>
+                      <a href="https://www.youtube.com/@VardhamanDevelopers" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube" className="text-[#a1a1a1] hover:text-[#D4AF37] transition-colors">
+                        <Youtube className="size-5" />
+                      </a>
+                      <a href="https://www.linkedin.com/in/vardhaman-developers-bb374040b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn" className="text-[#a1a1a1] hover:text-[#D4AF37] transition-colors">
+                        <Linkedin className="size-5" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </FadeIn>
@@ -1639,152 +2321,23 @@ export default function App() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-[#D4AF37]/15 bg-neutral-950 pt-16 pb-8">
-          <div className="max-w-[1180px] mx-auto px-6 sm:px-8">
+        <Footer setIsModalOpen={setIsModalOpen} />
 
-            {/* Top grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+        {/* Floating WhatsApp Button */}
+        <a 
+          href="https://wa.me/919876543210" 
+          target="_blank" 
+          rel="noreferrer"
+          className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 flex items-center justify-center size-14 rounded-full bg-[#25D366] text-white shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:scale-110 transition-transform duration-300"
+          aria-label="Chat on WhatsApp"
+        >
+          <svg className="size-8" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+          </svg>
+        </a>
 
-              {/* Brand */}
-              <div className="col-span-1 sm:col-span-2 md:col-span-1">
-                <a href="#home" className="flex items-center gap-[11px] mb-4">
-                  <img
-                    src={vardhamanCrest}
-                    alt="Vardhaman Park"
-                    className="h-10 w-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <span className="font-serif font-semibold text-white text-lg tracking-[1.5px] uppercase mt-0.5">
-                    Vardhaman Park
-                  </span>
-                </a>
-                <p className="text-white text-sm leading-6 mb-5">
-                  An exclusive enclave of meticulously crafted residences designed for those who expect nothing less than extraordinary.
-                </p>
-                <div className="flex items-center gap-3">
-                  {/* Social icons */}
-                  {[
-                    { label: "Facebook", path: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" },
-                    { label: "Instagram", path: "M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01M6.5 2h11A4.5 4.5 0 0 1 22 6.5v11a4.5 4.5 0 0 1-4.5 4.5h-11A4.5 4.5 0 0 1 2 17.5v-11A4.5 4.5 0 0 1 6.5 2z" },
-                    { label: "Twitter", path: "M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" },
-                    { label: "YouTube", path: "M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z" },
-                  ].map(({ label, path }) => (
-                    <a
-                      key={label}
-                      href="#"
-                      aria-label={label}
-                      className="size-9 rounded-full bg-neutral-800 border border-neutral-700 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 flex items-center justify-center transition-colors"
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-4 text-white hover:text-[#D4AF37]">
-                        <path d={path} />
-                      </svg>
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Quick Links */}
-              <div>
-                <h4 className="font-serif font-semibold text-white text-base mb-5">Quick Links</h4>
-                <ul className="flex flex-col gap-3">
-                  {[
-                    { label: "Home", href: "#home" },
-                    { label: "About Us", href: "#about" },
-                    { label: "Project", href: "#project" },
-                    { label: "Amenities", href: "#amenities" },
-                    { label: "Gallery", href: "#gallery" },
-                    { label: "Location", href: "#location" },
-                    { label: "Contact", href: "#contact" },
-                  ].map(({ label, href }) => (
-                    <li key={label}>
-                      <a href={href} className="text-white text-sm hover:text-[#D4AF37] transition-colors flex items-center gap-2 group">
-                        <span className="w-4 h-px bg-[#D4AF37]/40 group-hover:w-6 group-hover:bg-[#D4AF37] transition-all duration-300" />
-                        {label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Project Info */}
-              <div>
-                <h4 className="font-serif font-semibold text-white text-base mb-5">Project Info</h4>
-                <ul className="flex flex-col gap-3">
-                  {["2 BHK Residences", "3 BHK Residences", "4 BHK Penthouses", "Master Plan", "Floor Plans", "Price List", "RERA Details"].map((item) => (
-                    <li key={item}>
-                      <a href="#" className="text-white text-sm hover:text-[#D4AF37] transition-colors flex items-center gap-2 group">
-                        <span className="w-4 h-px bg-[#D4AF37]/40 group-hover:w-6 group-hover:bg-[#D4AF37] transition-all duration-300" />
-                        {item}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Contact */}
-              <div>
-                <h4 className="font-serif font-semibold text-white text-base mb-5">Contact Us</h4>
-                <ul className="flex flex-col gap-4">
-                  <li className="flex items-start gap-3">
-                    <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center mt-0.5">
-                      <MapPin className="size-4 text-[#D4AF37]" />
-                    </div>
-                    <p className="text-white text-sm leading-5">
-                      Vardhaman Park, Sector 12,<br />
-                      New Delhi – 110 001, India
-                    </p>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center">
-                      <Phone className="size-4 text-[#D4AF37]" />
-                    </div>
-                    <a href="tel:+911234567890" className="text-white text-sm hover:text-[#D4AF37] transition-colors">
-                      +91 12345 67890
-                    </a>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center">
-                      <Mail className="size-4 text-[#D4AF37]" />
-                    </div>
-                    <a href="mailto:info@vardhamanpark.com" className="text-white text-sm hover:text-[#D4AF37] transition-colors">
-                      info@vardhamanpark.com
-                    </a>
-                  </li>
-                </ul>
-
-                {/* Book Visit CTA */}
-                <Button
-                  className="mt-6 w-full shadow-[0_0_20px_rgba(212,175,55,0.3)] bg-[#D4AF37] hover:bg-[#c9a430] text-[#0B0B0B] gap-2 font-semibold"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  <CalendarCheck className="size-4" />
-                  Book a Visit
-                </Button>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="border-t border-[#D4AF37]/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <p className="text-white text-xs">
-                © 2025 Vardhaman Park. All rights reserved.
-              </p>
-              <div className="flex items-center gap-1 text-white text-xs">
-                <ShieldCheck className="size-3.5 text-[#D4AF37]" />
-                RERA Approved &nbsp;·&nbsp; MahaRERA No. P52100XXXXX
-              </div>
-              <div className="flex items-center gap-4">
-                {["Privacy Policy", "Terms of Use", "Disclaimer"].map((item) => (
-                  <a key={item} href="#" className="text-white text-xs hover:text-[#D4AF37] transition-colors">
-                    {item}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-          </div>
-        </footer>
-
+        {/* 100% Safe Isolated AI Summary for GEO */}
+        <GeoSummary />
       </div>
     </div>
   );
