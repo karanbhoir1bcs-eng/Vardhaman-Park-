@@ -166,11 +166,36 @@ function BookingModal({ onClose }: { onClose: () => void }) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    let newValue = value;
+    
+    if (name === "phone") {
+      // Keep only digits and slice to exactly 10
+      newValue = newValue.replace(/\D/g, '').slice(0, 10);
+    }
+    
+    if (name === "email") {
+      // Remove all spaces
+      newValue = newValue.replace(/\s/g, '');
+    }
+    
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (formData.phone.length < 10) {
+      alert("Mobile number must be exactly 10 digits.");
+      return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
     setStatus("submitting");
 
     try {
@@ -280,6 +305,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
                   required
                   placeholder="+91 00000 00000"
                   className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
+                  maxLength={10}
                 />
               </div>
 
@@ -331,6 +357,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
                 required
                 placeholder="Tell us about your preferences or any questions..."
                 className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors resize-none"
+                maxLength={1000}
               />
             </div>
 
@@ -480,11 +507,36 @@ export default function App() {
 
   const handleContactChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setContactData((prev) => ({ ...prev, [name]: value }));
+    
+    let newValue = value;
+    
+    if (name === "phone") {
+      // Keep only digits and slice to exactly 10
+      newValue = newValue.replace(/\D/g, '').slice(0, 10);
+    }
+    
+    if (name === "email") {
+      // Remove all spaces
+      newValue = newValue.replace(/\s/g, '');
+    }
+    
+    setContactData((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (contactData.phone.length < 10) {
+      alert("Mobile number must be exactly 10 digits.");
+      return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(contactData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
     setContactStatus("submitting");
 
     try {
@@ -700,7 +752,7 @@ export default function App() {
 
             <div className="mt-[60px] w-full max-w-2xl rounded-2xl border border-white/15 bg-black/40 p-6 md:backdrop-blur-md animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 fill-mode-both flex flex-col sm:flex-row gap-5 items-center">
               <div className="flex-1 text-white/90 text-center sm:text-left">
-                <h3 className="font-serif text-2xl md:text-3xl font-semibold mb-1">Interested in this project?</h3>
+                <h2 className="font-serif text-2xl md:text-3xl font-semibold mb-1">Interested in this project?</h2>
                 <p className="text-sm text-white/70">Get the latest pricing, floor plans, and brochure.</p>
               </div>
               <Button onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto min-h-[56px] rounded-xl bg-[#D4AF37] px-8 text-[#0B0B0B] hover:bg-white transition-colors gap-2 font-bold text-base shadow-[0_0_25px_rgba(212,175,55,0.4)]">
@@ -717,17 +769,17 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-12 items-center divide-y sm:divide-y-0 sm:divide-x divide-white/10">
               <FadeIn type="fade-up" delay={100} duration={600} className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0 first:pt-0">
                 <ShieldCheck className="size-8 text-[#D4AF37] mb-3" />
-                <h4 className="font-serif font-semibold text-neutral-50 text-lg">RERA Registered</h4>
+                <h3 className="font-serif font-semibold text-neutral-50 text-lg">RERA Registered</h3>
                 <p className="text-[#a1a1a1] text-xs mt-1">P517000XXXXX</p>
               </FadeIn>
               <FadeIn type="fade-up" delay={200} duration={600} className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0">
                 <Award className="size-8 text-[#D4AF37] mb-3" />
-                <h4 className="font-serif font-semibold text-neutral-50 text-lg">Award Winning</h4>
+                <h3 className="font-serif font-semibold text-neutral-50 text-lg">Award Winning</h3>
                 <p className="text-[#a1a1a1] text-xs mt-1">Best Residential Project 2024</p>
               </FadeIn>
               <FadeIn type="fade-up" delay={300} duration={600} className="flex flex-col items-center text-center px-4 pt-4 sm:pt-0">
                 <Milestone className="size-8 text-[#D4AF37] mb-3" />
-                <h4 className="font-serif font-semibold text-neutral-50 text-lg">18+ Years Legacy</h4>
+                <h3 className="font-serif font-semibold text-neutral-50 text-lg">18+ Years Legacy</h3>
                 <p className="text-[#a1a1a1] text-xs mt-1">Delivering Excellence</p>
               </FadeIn>
             </div>
@@ -767,7 +819,7 @@ export default function App() {
                   For over 18 years, Park 2.0 Phase 2 has redefined the art of
                   luxury living. Each residence is a testament to architectural
                   mastery — where timeless design meets modern innovation, and
-                  every detail is crafted to perfection.
+                  every detail is crafted to perfection. Discover our <a href="#project" className="text-[#D4AF37] hover:underline">premium amenities</a> and <a href="#floor-plans" className="text-[#D4AF37] hover:underline">thoughtfully designed floor plans</a> today.
                 </p>
               </FadeIn>
               <div className="grid grid-cols-1 sm:grid-cols-2 mt-8 gap-4">
@@ -2253,6 +2305,7 @@ export default function App() {
                         required
                         placeholder="+91 00000 00000"
                         className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors"
+                        maxLength={10}
                       />
                     </div>
                   </div>
@@ -2284,6 +2337,7 @@ export default function App() {
                       required
                       placeholder="Tell us about your requirements or any questions..."
                       className="rounded-xl bg-neutral-800 border border-neutral-700 focus:border-[#D4AF37]/60 outline-none px-4 py-3 text-neutral-50 text-sm placeholder:text-neutral-500 transition-colors resize-none"
+                      maxLength={1000}
                     />
                   </div>
 
