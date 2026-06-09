@@ -604,18 +604,18 @@ export default function App() {
         })}} />
         <header className="fixed left-0 right-0 top-0 z-50 w-full px-4 py-3 sm:px-8">
           <div className="max-w-[1180px] flex mx-auto px-5 sm:px-8 justify-between items-center h-16 rounded-[2rem] border border-white/15 bg-neutral-950/95 md:bg-neutral-950/55 shadow-[0_18px_50px_rgba(0,0,0,0.35)] md:backdrop-blur-xl">
-            <a href="#home" className="flex items-center gap-[11px] -ml-1 animate-in fade-in slide-in-from-left-4 duration-500 fill-mode-both">
+            <a href="#home" className="flex items-center shrink-0 gap-[11px] -ml-1 animate-in fade-in slide-in-from-left-4 duration-500 fill-mode-both">
               <img
                 src={vardhamanCrest}
                 alt="Park 2.0 Phase 2"
                 className="h-9 w-auto object-contain"
                 decoding="async"
               />
-              <span className="font-serif font-semibold text-white text-base sm:text-lg tracking-[1.5px] uppercase mt-0.5">
+              <span className="font-serif font-semibold text-white text-base sm:text-lg tracking-[1.5px] uppercase mt-0.5 whitespace-nowrap">
                 Vardhaman Park
               </span>
             </a>
-            <nav className="hidden md:flex justify-center items-center gap-1 lg:gap-2 md:ml-auto md:mr-6">
+            <nav className="hidden xl:flex justify-center items-center gap-1 xl:gap-2 xl:ml-auto xl:mr-6">
               <a href="#home" className="text-white/90 text-sm leading-5 px-3 inline-flex items-center hover:text-white hover:bg-white/10 rounded-full py-2 transition-colors animate-in fade-in slide-in-from-top-2 duration-500 delay-75 fill-mode-both">
                 Home
               </a>
@@ -641,7 +641,7 @@ export default function App() {
                 Contact
               </a>
             </nav>
-            <div className="hidden md:flex items-center gap-4 animate-in fade-in slide-in-from-right-4 duration-500 delay-1000 fill-mode-both">
+            <div className="hidden xl:flex items-center gap-4 animate-in fade-in slide-in-from-right-4 duration-500 delay-1000 fill-mode-both">
               <Button className="rounded-full bg-white text-[#101010] hover:bg-white/90 px-5 gap-2" onClick={() => setIsModalOpen(true)}>
                 <CalendarCheck className="size-4" />
                 Book Visit
@@ -651,7 +651,7 @@ export default function App() {
             {/* Hamburger Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex md:hidden p-2 text-neutral-50 hover:bg-white/10 rounded-full transition-colors border-0 bg-transparent cursor-pointer"
+              className="flex xl:hidden p-2 text-neutral-50 hover:bg-white/10 rounded-full transition-colors border-0 bg-transparent cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
@@ -661,7 +661,7 @@ export default function App() {
 
         {/* Mobile Navigation Dropdown */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-neutral-950/95 border border-white/15 backdrop-blur-xl fixed top-22 left-4 right-4 z-40 rounded-2xl py-6 px-6 flex flex-col gap-4">
+          <div className="xl:hidden bg-neutral-950/95 border border-white/15 backdrop-blur-xl fixed top-22 left-4 right-4 z-40 rounded-2xl py-6 px-6 flex flex-col gap-4">
             <a
               href="#home"
               onClick={() => setIsMobileMenuOpen(false)}
