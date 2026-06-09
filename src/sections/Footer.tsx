@@ -86,7 +86,7 @@ export default function Footer({ setIsModalOpen }: { setIsModalOpen: (val: boole
           <div>
             <h4 className="font-serif font-semibold text-white text-base mb-5">Project Info</h4>
             <ul className="flex flex-col gap-3">
-              {["2 BHK Residences", "3 BHK Residences", "Master Plan", "Floor Plans", "Price List", "RERA Details"].map((item) => (
+              {["1 BHK Residences", "2 BHK Residences", "3 BHK Residences", "Master Plan", "Floor Plans", "Price List", "RERA Details"].map((item) => (
                 <li key={item}>
                   <a href="#" className="text-white text-sm hover:text-[#D4AF37] transition-colors flex items-center gap-2 group">
                     <span className="w-4 h-px bg-[#D4AF37]/40 group-hover:w-6 group-hover:bg-[#D4AF37] transition-all duration-300" />
