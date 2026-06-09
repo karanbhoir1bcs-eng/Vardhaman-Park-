@@ -153,6 +153,31 @@ function FadeIn({
   );
 }
 
+function sendTourBookingToZoho(data: any) {
+    const zohoWebhookURL = "https://flow.zoho.in/60073630205/flow/webhook/incoming?zapikey=1001.4ce725db549fa43d8717b9b2256da867.25618e1fae87591b4184bc0374259505&isdebug=false";
+
+    const params = new URLSearchParams();
+    params.append("Timestamp", new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
+    params.append("Full Name", data.name);
+    params.append("Mobile Number", data.phone);
+    params.append("Email Address", data.email);
+    params.append("Preferred Visit Date", data.date);
+    params.append("Message", data.message);
+    params.append("Project Name", data.project);
+
+    return fetch(zohoWebhookURL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: params.toString()
+    })
+    .then(() => {
+        // When using no-cors, we can't read the response, so we just assume it was sent successfully
+    });
+}
+
 function BookingModal({ onClose }: { onClose: () => void }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -199,16 +224,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
     setStatus("submitting");
 
     try {
-      const formBody = new FormData();
-      Object.keys(formData).forEach((key) => formBody.append(key, formData[key as keyof typeof formData]));
-
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        body: formBody,
-        mode: "no-cors",
-      });
-
-      // When using no-cors, the response is opaque, so we assume success if no network error is thrown.
+      await sendTourBookingToZoho(formData);
       setStatus("success");
       setFormData({ name: "", phone: "", email: "", project: "Park 2.0 Phase 2", date: "", message: "" });
     } catch (error) {
@@ -281,6 +297,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
                   Full Name
                 </label>
                 <input
+                  id="fullName"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -298,6 +315,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
                   Mobile Number
                 </label>
                 <input
+                  id="mobileNumber"
                   type="tel"
                   name="phone"
                   value={formData.phone}
@@ -316,6 +334,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
                   Email Address
                 </label>
                 <input
+                  id="emailAddress"
                   type="email"
                   name="email"
                   value={formData.email}
@@ -333,6 +352,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
                   Preferred Visit Date
                 </label>
                 <input
+                  id="visitDate"
                   type="date"
                   name="date"
                   value={formData.date}
@@ -350,6 +370,7 @@ function BookingModal({ onClose }: { onClose: () => void }) {
                 Message
               </label>
               <textarea
+                id="message"
                 rows={3}
                 name="message"
                 value={formData.message}
