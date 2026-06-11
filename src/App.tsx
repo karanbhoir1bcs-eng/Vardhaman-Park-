@@ -764,6 +764,7 @@ export default function App() {
                 </span>
               </div>
               <h1 className="mt-3 max-w-[780px] font-serif font-semibold text-white text-4xl leading-[1.05] sm:text-5xl md:text-6xl animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-150 fill-mode-both">
+                <span className="sr-only">Park 2.0 Phase 2 – Premium 1 & 2 BHK Homes in Shahad, Kalyan. </span>
                 Discover Elevated Living at Park 2.0 Phase 2
               </h1>
               <p className="mt-4 max-w-xl text-sm sm:text-base leading-6 text-white/80 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 fill-mode-both">
@@ -1429,7 +1430,7 @@ export default function App() {
                             {sub.icon}
                           </div>
                           <div className="flex flex-col gap-1">
-                            <h4 className="font-serif font-semibold text-neutral-100 text-base leading-5">{sub.label}</h4>
+                            <h3 className="font-serif font-semibold text-neutral-100 text-base leading-5">{sub.label}</h3>
                             <p className="text-[#a1a1a1] text-sm leading-5">{sub.desc}</p>
                           </div>
                         </div>
@@ -1772,9 +1773,9 @@ export default function App() {
                                   ? "Kitchen & Bath"
                                   : "Exteriors"}
                               </p>
-                              <h4 className="text-neutral-50 font-serif font-semibold text-lg leading-6">
+                              <h3 className="text-neutral-50 font-serif font-semibold text-lg leading-6">
                                 {item.title}
-                              </h4>
+                              </h3>
                             </div>
                             <div className="size-10 shrink-0 rounded-full bg-[#D4AF37]/10 border border-solid border-[#D4AF37]/30 flex justify-center items-center backdrop-blur-xs">
                               <Maximize2 className="size-5 text-[#D4AF37]" />
@@ -1918,9 +1919,9 @@ export default function App() {
                   decoding="async"
                 />
                 <div className="mt-4 text-center">
-                  <h4 className="text-neutral-50 font-serif font-semibold text-xl">
+                  <h3 className="text-neutral-50 font-serif font-semibold text-xl">
                     {galleryItems[lightboxIndex].title}
-                  </h4>
+                  </h3>
                   <p className="text-sm text-[#D4AF37] uppercase tracking-wider mt-1">
                     {galleryItems[lightboxIndex].category === "living"
                       ? "Living Room"

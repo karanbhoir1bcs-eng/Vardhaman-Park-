@@ -61,7 +61,7 @@ export default function Footer({ setIsModalOpen }: { setIsModalOpen: (val: boole
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-serif font-semibold text-white text-base mb-5">Quick Links</h4>
+            <h3 className="font-serif font-semibold text-white text-base mb-5">Quick Links</h3>
             <ul className="flex flex-col gap-3">
               {[
                 { label: "Home", href: "#home" },
@@ -84,7 +84,7 @@ export default function Footer({ setIsModalOpen }: { setIsModalOpen: (val: boole
 
           {/* Project Info */}
           <div>
-            <h4 className="font-serif font-semibold text-white text-base mb-5">Project Info</h4>
+            <h3 className="font-serif font-semibold text-white text-base mb-5">Project Info</h3>
             <ul className="flex flex-col gap-3">
               {["1 BHK Residences", "2 BHK Residences", "3 BHK Residences", "Master Plan", "Floor Plans", "Price List", "RERA Details"].map((item) => (
                 <li key={item}>
@@ -99,7 +99,7 @@ export default function Footer({ setIsModalOpen }: { setIsModalOpen: (val: boole
 
           {/* Contact */}
           <div>
-            <h4 className="font-serif font-semibold text-white text-base mb-5">Contact Us</h4>
+            <h3 className="font-serif font-semibold text-white text-base mb-5">Contact Us</h3>
             <ul className="flex flex-col gap-4">
               <li className="flex items-start gap-3">
                 <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center mt-0.5">
@@ -141,7 +141,7 @@ export default function Footer({ setIsModalOpen }: { setIsModalOpen: (val: boole
 
           {/* QR Code Column */}
           <div>
-            <h4 className="font-serif font-semibold text-white text-base mb-5">Official Registration</h4>
+            <h3 className="font-serif font-semibold text-white text-base mb-5">Official Registration</h3>
             <div className="w-full max-w-[280px]">
               <MahaReraQr />
             </div>
