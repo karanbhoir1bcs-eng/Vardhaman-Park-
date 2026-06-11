@@ -73,9 +73,9 @@ export default function ConfirmBooking() {
               Reserve Your Home
               <span className="bg-[#D4AF37] w-6 h-px" />
             </div>
-            <h1 className="font-serif font-semibold text-neutral-50 text-3xl leading-tight">
+            <h2 className="font-serif font-semibold text-neutral-50 text-3xl leading-tight">
               Confirm Your Booking
-            </h1>
+            </h2>
             <p className="text-[#a1a1a1] text-sm mt-2 leading-relaxed">
               Fill in your details below and our luxury consultant will
               reach&nbsp;out within 24&nbsp;hours.
@@ -88,9 +88,9 @@ export default function ConfirmBooking() {
               <div className="size-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 animate-bounce">
                 <ShieldCheck className="size-8" />
               </div>
-              <h2 className="text-neutral-50 font-semibold text-xl">
+              <h3 className="text-neutral-50 font-semibold text-xl">
                 Booking Confirmed!
-              </h2>
+              </h3>
               <p className="text-[#a1a1a1] text-sm max-w-xs">
                 We've received your details. Our team will get back to you
                 shortly.
