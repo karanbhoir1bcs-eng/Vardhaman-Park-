@@ -105,11 +105,11 @@ export default function Footer({ setIsModalOpen }: { setIsModalOpen: (val: boole
                 <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center mt-0.5">
                   <MapPin className="size-4 text-[#D4AF37]" />
                 </div>
-                <p className="text-white text-sm leading-5">
+                <address className="text-white text-sm leading-5 not-italic">
                   Park 2.0 Phase 2,<br />
                   Dhakate Shahad, Shahad,<br />
                   Kalyan, Maharashtra - 421103
-                </p>
+                </address>
               </li>
               <li className="flex items-center gap-3">
                 <div className="size-8 shrink-0 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 flex items-center justify-center">
