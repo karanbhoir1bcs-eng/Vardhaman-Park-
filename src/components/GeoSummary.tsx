@@ -12,7 +12,7 @@ export default function GeoSummary() {
         <li>Location: <span itemProp="address">Dhakate Shahad, Kalyan, Maharashtra, 421103</span></li>
         <li>Configurations Available: <span itemProp="accommodationCategory">1 BHK, 2 BHK</span></li>
         <li>RERA Status: <span itemProp="certification">Approved</span></li>
-        <li>Contact: info@vardhamanpark.in</li>
+        <li>Contact: info@vardhamanpark.com</li>
       </ul>
     </section>
   );
